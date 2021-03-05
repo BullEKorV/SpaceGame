@@ -7,7 +7,9 @@ class Program
 {
     static void Main(string[] args)
     {
-        SpaceShip playerShip = new SpaceShip(0, 0, 0, 90, 100, "mouse");
+        SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, "arrow");
+
+        List<Bullet> bullets = new List<Bullet>();
 
         Raylib.InitWindow(1000, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
@@ -20,34 +22,34 @@ class Program
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.WHITE);
 
-            PlayerControl(playerShip);
+            var playerControl = PlayerControl(playerShip, bullets);
+            playerShip = playerControl.Item1;
+            bullets = playerControl.Item2;
 
-            CalculatePosition(playerShip);
-
-            RenderWorld(Textures, playerShip);
+            RenderWorld(Textures, playerShip, bullets);
+            Console.WriteLine(bullets.Count);
 
             // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
 
             Raylib.EndDrawing();
         }
     }
-    static SpaceShip PlayerControl(SpaceShip playerShip)
+    static List<Bullet> SpawnBullet(List<Bullet> bullets, float x, float y, float rotation, int shipHeight)
+    {
+
+        return bullets;
+    }
+    static (SpaceShip, List<Bullet>) PlayerControl(SpaceShip playerShip, List<Bullet> bullets)
     {
         // Arrow control
         if (playerShip.controllerType == "arrow")
         {
-            float turnSpeed = 2f;
             if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
-                playerShip.rotation += turnSpeed;
+                playerShip.rotationVelocity += 0.2f;
             if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
-                playerShip.rotation -= turnSpeed;
-
-            if (playerShip.rotation > 360)
-                playerShip.rotation = 0;
-            if (playerShip.rotation < 0)
-                playerShip.rotation = 360;
+                playerShip.rotationVelocity -= 0.2f;
         }
-        // Mouse and wasd control
+        // Mouse control
         else if (playerShip.controllerType == "mouse")
         {
             float deltaY = (Raylib.GetMouseY() + playerShip.y) - (playerShip.y + Raylib.GetScreenHeight() / 2); // Calculate Delta y
@@ -55,37 +57,60 @@ class Program
             float deltaX = (Raylib.GetMouseX() + playerShip.x) - (playerShip.x + Raylib.GetScreenWidth() / 2); // Calculate delta x
 
             float angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) + 90; // Find angle
-            // Console.WriteLine(deltaX + " " + deltaY);
 
             if (angle < 0)
                 angle = 360 - Math.Abs(angle);
 
-            playerShip.rotation = angle;
+            playerShip.rotationVelocity = angle - playerShip.rotation;
+        }
+
+        // Spawn bullet
+        if ((Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && playerShip.controllerType == "mouse") || (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && playerShip.controllerType == "arrow"))
+        {
+            BulletScript.SpawnBullet(bullets, playerShip.x, playerShip.y, playerShip.rotation, 100);
         }
 
         // Calculate velocity
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) || Raylib.IsKeyDown(KeyboardKey.KEY_UP))
-        {
+        if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.controllerType == "mouse") || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.controllerType == "arrow"))
             playerShip.velocity += 0.05f;
-        }
-        else playerShip.velocity *= 0.96f;
-
-        return playerShip;
-    }
-    static SpaceShip CalculatePosition(SpaceShip playerShip)
-    {
-        if (playerShip.velocity > 5)
+        else playerShip.velocity *= 0.95f;
+        if (playerShip.velocity > 5) // Constraint max velocity
             playerShip.velocity = 5;
 
-        double radians = (Math.PI / 180) * playerShip.rotation;
+        // Calculate new rotation
+        playerShip.rotation = CalculateRotation(playerShip.rotation, playerShip.rotationVelocity);
+        playerShip.rotationVelocity *= 0.95f; // Slow down rotation
 
-        playerShip.x = (float)(playerShip.x + playerShip.velocity * Math.Sin(radians));
+        // Calculate new position
+        var newPos = CalculatePosition(playerShip.x, playerShip.y, playerShip.velocity, playerShip.rotation);
+        playerShip.x = newPos.x;
+        playerShip.y = newPos.y;
 
-        playerShip.y = (float)(playerShip.y + playerShip.velocity * Math.Cos(radians));
-
-        return playerShip;
+        return (playerShip, bullets);
     }
-    static void RenderWorld(Dictionary<String, Texture2D> Textures, SpaceShip playerShip) // RenderWorld
+    static float CalculateRotation(float rotation, float rotationVelocity)
+    {
+        rotation += rotationVelocity;
+
+        // Keep rotation in range
+        if (rotation > 360)
+            rotation -= 360;
+        if (rotation < 0)
+            rotation += 360;
+
+        return rotation;
+    }
+    static public (float x, float y) CalculatePosition(float x, float y, float velocity, float rotation)
+    {
+        double radians = (Math.PI / 180) * rotation;
+
+        x = (float)(x + velocity * Math.Sin(radians));
+
+        y = (float)(y + velocity * Math.Cos(radians));
+
+        return (x, y);
+    }
+    static void RenderWorld(Dictionary<String, Texture2D> Textures, SpaceShip playerShip, List<Bullet> bullets) // RenderWorld
     {
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
 
@@ -104,6 +129,12 @@ class Program
         Vector2 origin = new Vector2((float)shipWidth * sizeMultiplier * 0.5f, (float)shipheight * sizeMultiplier * 0.5f);
 
         Raylib.DrawTexturePro(Textures["PlayerShip"], sourceRec, destRec, origin, playerShip.rotation, Color.WHITE);
+
+        // Draw bullets
+        foreach (var bullet in bullets)
+        {
+            Raylib.DrawRectangle((int)bullet.x - (int)playerShip.x, (int)bullet.y + (int)playerShip.y, 10, 10, Color.BLACK);
+        }
     }
     static Dictionary<String, Texture2D> LoadTextures() // Load Textures
     {
@@ -113,20 +144,22 @@ class Program
         return Textures;
     }
 }
-
 class SpaceShip
 {
     public float x;
     public float y;
     public float velocity;
+    public float rotationVelocity;
     public float rotation;
     public int health;
     public string controllerType;
-    public SpaceShip(float x, float y, float velocity, float rotation, int health, string controllerType)
+    public SpaceShip(float x, float y, float rotation, int health, string controllerType)
     {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
+        // this.velocity = velocity;
+        // this.rotationVelocity = rotationVelocity;
         this.health = health;
         this.controllerType = controllerType;
     }
