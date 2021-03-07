@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, "arrow");
+        SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, "mouse");
 
         List<Bullet> bullets = new List<Bullet>();
 
@@ -22,22 +22,47 @@ class Program
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.WHITE);
 
+            // Control player and spawn bullets
             var playerControl = PlayerControl(playerShip, bullets);
             playerShip = playerControl.Item1;
             bullets = playerControl.Item2;
 
+            BulletScript.MoveBullets(bullets, playerShip); // Update bullets position
+
+            CheckCollision(bullets, playerShip);
+
+            // if (Raylib.IsKeyPressed(KeyboardKey.KEY_B))
+            // {
+            //     foreach (var bullet in bullets)
+            //     {
+            //         Console.WriteLine(bullet.y);
+            //     }
+            //     Console.WriteLine(playerShip.y);
+            // }
+
             RenderWorld(Textures, playerShip, bullets);
-            Console.WriteLine(bullets.Count);
 
             // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
 
             Raylib.EndDrawing();
         }
     }
-    static List<Bullet> SpawnBullet(List<Bullet> bullets, float x, float y, float rotation, int shipHeight)
+    static void CheckCollision(List<Bullet> bullets, SpaceShip playerShip)
     {
+        foreach (var bullet in bullets)
+        {
+            Rectangle obstacle = new Rectangle(bullet.x, bullet.y, 10, 10);
+            Rectangle player = new Rectangle(playerShip.x, playerShip.y, 140, 140);
 
-        return bullets;
+            if (Raylib.CheckCollisionRecs(obstacle, player))
+            {
+                // Console.WriteLine("Hej");
+                // var newPos = CalculatePosition(playerShip.x, playerShip.y, -playerShip.velocity, playerShip.rotation);
+                // playerShip.x = newPos.x;
+                // playerShip.y = newPos.y;
+            }
+        }
+
     }
     static (SpaceShip, List<Bullet>) PlayerControl(SpaceShip playerShip, List<Bullet> bullets)
     {
@@ -52,16 +77,8 @@ class Program
         // Mouse control
         else if (playerShip.controllerType == "mouse")
         {
-            float deltaY = (Raylib.GetMouseY() + playerShip.y) - (playerShip.y + Raylib.GetScreenHeight() / 2); // Calculate Delta y
-
-            float deltaX = (Raylib.GetMouseX() + playerShip.x) - (playerShip.x + Raylib.GetScreenWidth() / 2); // Calculate delta x
-
-            float angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) + 90; // Find angle
-
-            if (angle < 0)
-                angle = 360 - Math.Abs(angle);
-
-            playerShip.rotationVelocity = angle - playerShip.rotation;
+            // Make ship look at player
+            playerShip.rotation = LookAt(playerShip.x + Raylib.GetScreenWidth() / 2, playerShip.y + Raylib.GetScreenHeight() / 2, playerShip.x + Raylib.GetMouseX(), playerShip.y + Raylib.GetMouseY());
         }
 
         // Spawn bullet
@@ -87,6 +104,19 @@ class Program
         playerShip.y = newPos.y;
 
         return (playerShip, bullets);
+    }
+    static public float LookAt(float x1, float y1, float x2, float y2)
+    {
+        float deltaY = y2 - y1; // Calculate Delta y
+
+        float deltaX = x2 - x1; // Calculate delta x
+
+        float angle = (float)(Math.Atan2(deltaY, deltaX) * 180.0 / Math.PI) + 90; // Find angle
+
+        if (angle < 0)
+            angle = 360 - Math.Abs(angle);
+
+        return angle;
     }
     static float CalculateRotation(float rotation, float rotationVelocity)
     {
@@ -117,24 +147,40 @@ class Program
         Raylib.DrawRectangle((int)(-playerShip.x - 50f), (int)(playerShip.y - 50f), 100, 100, Color.GREEN);
 
         // Draw player
-        float sizeMultiplier = 0.7f;
+        // float sizeMultiplier = 0.7f;
 
-        int shipWidth = Textures["PlayerShip"].width;
-        int shipheight = Textures["PlayerShip"].height;
+        // int shipWidth = Textures["PlayerShip"].width;
+        // int shipheight = Textures["PlayerShip"].height;
 
-        Rectangle sourceRec = new Rectangle(0.0f, 0.0f, (float)shipWidth, (float)shipheight);
+        // Rectangle sourceRec = new Rectangle(0.0f, 0.0f, (float)shipWidth, (float)shipheight);
 
-        Rectangle destRec = new Rectangle(Raylib.GetScreenWidth() / 2.0f, Raylib.GetScreenHeight() / 2.0f, shipWidth * sizeMultiplier, shipheight * sizeMultiplier);
+        // Rectangle destRec = new Rectangle(Raylib.GetScreenWidth() / 2.0f, Raylib.GetScreenHeight() / 2.0f, shipWidth * sizeMultiplier, shipheight * sizeMultiplier);
 
-        Vector2 origin = new Vector2((float)shipWidth * sizeMultiplier * 0.5f, (float)shipheight * sizeMultiplier * 0.5f);
+        // Vector2 origin = new Vector2((float)shipWidth * sizeMultiplier * 0.5f, (float)shipheight * sizeMultiplier * 0.5f);
 
-        Raylib.DrawTexturePro(Textures["PlayerShip"], sourceRec, destRec, origin, playerShip.rotation, Color.WHITE);
+        // Raylib.DrawTexturePro(Textures["PlayerShip"], sourceRec, destRec, origin, playerShip.rotation, Color.WHITE);
+
+        DrawObjectRotation(Textures["PlayerShip"], 0, 0, playerShip.rotation);
 
         // Draw bullets
         foreach (var bullet in bullets)
         {
-            Raylib.DrawRectangle((int)bullet.x - (int)playerShip.x, (int)bullet.y + (int)playerShip.y, 10, 10, Color.BLACK);
+            DrawObjectRotation(Textures["PlayerShip"], (int)bullet.x - (int)playerShip.x, -(int)bullet.y + (int)playerShip.y, bullet.rotation);
+            // Raylib.DrawRectanglePro(new Rectangle((int)bullet.x - (int)playerShip.x + Raylib.GetScreenWidth() / 2, -(int)bullet.y + (int)playerShip.y + Raylib.GetScreenHeight() / 2, 10, 10), new Vector2(0, 0), bullet.rotation, Color.BLACK);
         }
+    }
+    static void DrawObjectRotation(Texture2D texture, float x, float y, float rotation)
+    {
+        int width = texture.width;
+        int height = texture.height;
+
+        Rectangle sourceRec = new Rectangle(0.0f, 0.0f, (float)width, (float)height);
+
+        Rectangle destRec = new Rectangle(x + Raylib.GetScreenWidth() / 2.0f, y + Raylib.GetScreenHeight() / 2.0f, width, height);
+
+        Vector2 origin = new Vector2((float)width * 0.5f, (float)height * 0.5f);
+
+        Raylib.DrawTexturePro(texture, sourceRec, destRec, origin, rotation, Color.WHITE);
     }
     static Dictionary<String, Texture2D> LoadTextures() // Load Textures
     {
