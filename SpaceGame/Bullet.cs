@@ -7,7 +7,6 @@ class BulletScript
     {
         foreach (Bullet bullet in bullets)
         {
-            bullet.velocity = 0;
             // Delete bullet if too far away
             if (Math.Abs(bullet.y - playerShip.y) > 1200 || Math.Abs(bullet.x - playerShip.x) > 1500)
             {

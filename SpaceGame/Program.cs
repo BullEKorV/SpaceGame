@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, "mouse");
+        SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, ShipType.Mouse);
 
         List<Bullet> bullets = new List<Bullet>();
 
@@ -81,7 +81,7 @@ class Program
     static (SpaceShip, List<Bullet>) PlayerControl(SpaceShip playerShip, List<Bullet> bullets)
     {
         // Arrow control
-        if (playerShip.controllerType == "arrow")
+        if (playerShip.type == ShipType.Arrow)
         {
             if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
                 playerShip.rotationVelocity += 0.2f;
@@ -89,20 +89,20 @@ class Program
                 playerShip.rotationVelocity -= 0.2f;
         }
         // Mouse control
-        else if (playerShip.controllerType == "mouse")
+        else if (playerShip.type == ShipType.Mouse)
         {
             // Make ship look at player
             playerShip.rotation = LookAt(playerShip.x + Raylib.GetScreenWidth() / 2, playerShip.y - Raylib.GetScreenHeight() / 2, playerShip.x + Raylib.GetMouseX(), playerShip.y - Raylib.GetMouseY());
         }
 
         // Spawn bullet
-        if ((Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && playerShip.controllerType == "mouse") || (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && playerShip.controllerType == "arrow"))
+        if ((Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Arrow))
         {
             BulletScript.SpawnBullet(bullets, playerShip.x, playerShip.y, playerShip.rotation, playerShip.height / 2);
         }
 
         // Calculate velocity
-        if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.controllerType == "mouse") || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.controllerType == "arrow"))
+        if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.type == ShipType.Arrow))
             playerShip.velocity += 0.05f;
         else playerShip.velocity *= 0.95f;
         if (playerShip.velocity > 5) // Constraint max velocity
@@ -174,11 +174,11 @@ class Program
     }
     static void DrawHealthBar(float x, float y, int width, int height, int health, int maxHealth)
     {
-        Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2, (int)y - height / 2 + Raylib.GetScreenHeight() / 2, width, 30, Color.WHITE);
-
         float percentOfHealthLeft = ((float)health / (float)maxHealth);
 
         int borderOffset = 3;
+
+        Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2, (int)y - height / 2 + Raylib.GetScreenHeight() / 2, width, 30, Color.WHITE);
 
         Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)y - height / 2 + Raylib.GetScreenHeight() / 2 + borderOffset, (int)(width * percentOfHealthLeft - (borderOffset * 2)), 30 - borderOffset * 2, Color.RED);
     }
@@ -215,14 +215,20 @@ class SpaceShip
     public float rotation;
     public int health;
     public int maxHealth;
-    public string controllerType;
-    public SpaceShip(float x, float y, float rotation, int maxHealth, string controllerType)
+    public ShipType type;
+    public SpaceShip(float x, float y, float rotation, int maxHealth, ShipType type)
     {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.controllerType = controllerType;
+        this.type = type;
     }
+}
+
+enum ShipType
+{
+    Arrow,
+    Mouse,
 }
