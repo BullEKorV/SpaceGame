@@ -12,7 +12,7 @@ class Program
         List<Bullet> bullets = new List<Bullet>();
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
-        // Raylib.SetTargetFPS(120);
+        Raylib.SetTargetFPS(120);
 
         Dictionary<String, Texture2D> Textures = LoadTextures(); // Game Textures
         
@@ -45,24 +45,24 @@ class Program
     }
     static void CheckCollision(List<Bullet> bullets, SpaceShip playerShip)
     {
-        // double radians = (Math.PI / 180) * playerShip.rotation;
+        double radians = (Math.PI / 180) * playerShip.rotation;
 
-        // float p1X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p1Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        float p1X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        float p1Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        // float p2X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p2Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        float p2X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        float p2Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        // float p3X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p3Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        float p3X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        float p3Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        // float p4X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p4Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        float p4X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        float p4Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        // Raylib.DrawRectangle((int)p1X + Raylib.GetScreenWidth() / 2, (int)p1Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.RED);
-        // Raylib.DrawRectangle((int)p2X + Raylib.GetScreenWidth() / 2, (int)p2Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.DARKGRAY);
-        // Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
-        // Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
+        Raylib.DrawRectangle((int)p1X + Raylib.GetScreenWidth() / 2, (int)p1Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.RED);
+        Raylib.DrawRectangle((int)p2X + Raylib.GetScreenWidth() / 2, (int)p2Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.DARKGRAY);
+        Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
+        Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
 
         foreach (var bullet in bullets)
         {
