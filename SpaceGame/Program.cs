@@ -33,9 +33,10 @@ class Program
 
             BulletScript.MoveBullets(bullets, playerShip); // Update bullets position
 
+            RenderWorld(Textures, playerShip, bullets);
             CheckCollision(bullets, playerShip);
 
-            RenderWorld(Textures, playerShip, bullets);
+            // Console.WriteLine(playerShip.health + "" + playerShip.maxHealth);
 
             // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
 
@@ -44,31 +45,37 @@ class Program
     }
     static void CheckCollision(List<Bullet> bullets, SpaceShip playerShip)
     {
-        double radians = (Math.PI / 180) * playerShip.rotation;
+        // double radians = (Math.PI / 180) * playerShip.rotation;
 
-        float p1X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        float p1Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p1X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        // float p1Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        float p2X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        float p2Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p2X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        // float p2Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        float p3X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        float p3Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p3X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        // float p3Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-        float p4X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        float p4Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p4X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
+        // float p4Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
 
-
-        Console.WriteLine(p1X + " " + p1Y);
-
-        Raylib.DrawRectangle((int)p1X + Raylib.GetScreenWidth() / 2, (int)p1Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.RED);
-        Raylib.DrawRectangle((int)p2X + Raylib.GetScreenWidth() / 2, (int)p2Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.DARKGRAY);
-        Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
-        Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
+        // Raylib.DrawRectangle((int)p1X + Raylib.GetScreenWidth() / 2, (int)p1Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.RED);
+        // Raylib.DrawRectangle((int)p2X + Raylib.GetScreenWidth() / 2, (int)p2Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.DARKGRAY);
+        // Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
+        // Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
 
         foreach (var bullet in bullets)
         {
+            float distanceBetweenCirclesSquared =
+            (bullet.x - playerShip.x) * (bullet.x - playerShip.x) +
+            (bullet.y - playerShip.y) * (bullet.y - playerShip.y);
 
+            // Raylib.DrawCircle((int)(bullet.x - playerShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + playerShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
+            // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, playerShip.width / 2, Color.RED);
+
+
+            if (distanceBetweenCirclesSquared < (playerShip.width / 2 + 10) * (playerShip.width / 2 + 10))
+                playerShip.health--;
         }
     }
     static (SpaceShip, List<Bullet>) PlayerControl(SpaceShip playerShip, List<Bullet> bullets)
@@ -161,6 +168,19 @@ class Program
         {
             DrawObjectRotation(Textures["Laser"], (int)bullet.x - (int)playerShip.x, -(int)bullet.y + (int)playerShip.y, bullet.rotation);
         }
+
+        // Draw player health bar
+        DrawHealthBar(0, 0, playerShip.width, playerShip.height, playerShip.health, playerShip.maxHealth);
+    }
+    static void DrawHealthBar(float x, float y, int width, int height, int health, int maxHealth)
+    {
+        Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2, (int)y - height / 2 + Raylib.GetScreenHeight() / 2, width, 30, Color.WHITE);
+
+        float percentOfHealthLeft = ((float)health / (float)maxHealth);
+
+        int borderOffset = 3;
+
+        Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)y - height / 2 + Raylib.GetScreenHeight() / 2 + borderOffset, (int)(width * percentOfHealthLeft - (borderOffset * 2)), 30 - borderOffset * 2, Color.RED);
     }
     static void DrawObjectRotation(Texture2D texture, float x, float y, float rotation)
     {
@@ -194,13 +214,15 @@ class SpaceShip
     public float rotationVelocity;
     public float rotation;
     public int health;
+    public int maxHealth;
     public string controllerType;
-    public SpaceShip(float x, float y, float rotation, int health, string controllerType)
+    public SpaceShip(float x, float y, float rotation, int maxHealth, string controllerType)
     {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
-        this.health = health;
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
         this.controllerType = controllerType;
     }
 }
