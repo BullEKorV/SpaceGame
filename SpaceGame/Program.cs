@@ -12,10 +12,10 @@ class Program
         List<Bullet> bullets = new List<Bullet>();
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
-        Raylib.SetTargetFPS(120);
+        // Raylib.SetTargetFPS(120);
 
         Dictionary<String, Texture2D> Textures = LoadTextures(); // Game Textures
-
+        
         // Give width and height to playership
         playerShip.width = Textures["PlayerShip"].width;
         playerShip.height = Textures["PlayerShip"].height;
