@@ -18,8 +18,6 @@ class Program
 
         Dictionary<String, Texture2D> Textures = LoadTextures(); // Game Textures
 
-        enemies = Enemy.SpawnEnemy(enemies, playerShip, Textures["PlayerShip"]);
-
         // Give width and height to playership
         playerShip.width = Textures["PlayerShip"].width;
         playerShip.height = Textures["PlayerShip"].height;
@@ -35,18 +33,27 @@ class Program
             playerShip = playerControl.Item1;
             bullets = playerControl.Item2;
 
+            // Enemy AI
+            var enemyData = EnemyScript.EnemyCode(enemies, playerShip, bullets, Textures);
+            enemies = enemyData.Item1;
+            bullets = enemyData.Item2;
+
             // Update bullets position
             BulletScript.MoveBullets(bullets, playerShip);
 
+            // Check collision
+            CheckCollision(bullets, playerShip, enemies);
+
+
+            // Render world
             RenderWorld(Textures, playerShip, enemies, bullets);
-            CheckCollision(bullets, playerShip);
 
             // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
 
             Raylib.EndDrawing();
         }
     }
-    static void CheckCollision(List<Bullet> bullets, SpaceShip playerShip)
+    static void CheckCollision(List<Bullet> bullets, SpaceShip playerShip, List<SpaceShip> enemies)
     {
         // double radians = (Math.PI / 180) * playerShip.rotation;
 
@@ -67,18 +74,22 @@ class Program
         // Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
         // Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
 
-        foreach (var bullet in bullets)
+        for (int i = 0; i < bullets.Count; i++)
         {
             float distanceBetweenCirclesSquared =
-            (bullet.x - playerShip.x) * (bullet.x - playerShip.x) +
-            (bullet.y - playerShip.y) * (bullet.y - playerShip.y);
+            (bullets[i].x - playerShip.x) * (bullets[i].x - playerShip.x) +
+            (bullets[i].y - playerShip.y) * (bullets[i].y - playerShip.y);
 
             // Raylib.DrawCircle((int)(bullet.x - playerShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + playerShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
             // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, playerShip.width / 2, Color.RED);
 
 
             if (distanceBetweenCirclesSquared < (playerShip.width / 2 + 10) * (playerShip.width / 2 + 10))
+            {
                 playerShip.health--;
+                bullets.Remove(bullets[i]);
+            }
+
         }
     }
     static (SpaceShip, List<Bullet>) PlayerControl(SpaceShip playerShip, List<Bullet> bullets)
@@ -106,10 +117,11 @@ class Program
 
         // Calculate velocity
         if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.type == ShipType.Arrow))
-            playerShip.velocity += 0.02f;
+            playerShip.velocity += 0.04f;
         else playerShip.velocity *= 0.97f;
         if (playerShip.velocity > 5) // Constraint max velocity
             playerShip.velocity = 5;
+
 
         // Calculate new rotation
         playerShip.rotation = CalculateRotation(playerShip.rotation, playerShip.rotationVelocity);
@@ -230,6 +242,7 @@ class SpaceShip
     public float rotation;
     public int health;
     public int maxHealth;
+    public int timeSinceShot;
     public ShipType type;
     public SpaceShip(float x, float y, float rotation, int maxHealth, ShipType type)
     {
