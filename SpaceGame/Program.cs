@@ -11,11 +11,15 @@ class Program
 
         List<Bullet> bullets = new List<Bullet>();
 
+        List<SpaceShip> enemies = new List<SpaceShip>();
+
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
 
         Dictionary<String, Texture2D> Textures = LoadTextures(); // Game Textures
-        
+
+        enemies = Enemy.SpawnEnemy(enemies, playerShip, Textures["PlayerShip"]);
+
         // Give width and height to playership
         playerShip.width = Textures["PlayerShip"].width;
         playerShip.height = Textures["PlayerShip"].height;
@@ -31,12 +35,11 @@ class Program
             playerShip = playerControl.Item1;
             bullets = playerControl.Item2;
 
-            BulletScript.MoveBullets(bullets, playerShip); // Update bullets position
+            // Update bullets position
+            BulletScript.MoveBullets(bullets, playerShip);
 
-            RenderWorld(Textures, playerShip, bullets);
+            RenderWorld(Textures, playerShip, enemies, bullets);
             CheckCollision(bullets, playerShip);
-
-            // Console.WriteLine(playerShip.health + "" + playerShip.maxHealth);
 
             // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
 
@@ -103,8 +106,8 @@ class Program
 
         // Calculate velocity
         if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.type == ShipType.Arrow))
-            playerShip.velocity += 0.05f;
-        else playerShip.velocity *= 0.95f;
+            playerShip.velocity += 0.02f;
+        else playerShip.velocity *= 0.97f;
         if (playerShip.velocity > 5) // Constraint max velocity
             playerShip.velocity = 5;
 
@@ -154,7 +157,7 @@ class Program
 
         return (x, y);
     }
-    static void RenderWorld(Dictionary<String, Texture2D> Textures, SpaceShip playerShip, List<Bullet> bullets) // RenderWorld
+    static void RenderWorld(Dictionary<String, Texture2D> Textures, SpaceShip playerShip, List<SpaceShip> enemies, List<Bullet> bullets) // RenderWorld
     {
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
 
@@ -162,6 +165,11 @@ class Program
 
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], 0, 0, playerShip.rotation);
+
+        foreach (var enemy in enemies)
+        {
+            DrawObjectRotation(Textures["PlayerShip"], (int)enemy.x - (int)playerShip.x, -(int)enemy.y + (int)playerShip.y, enemy.rotation);
+        }
 
         // Draw bullets
         foreach (var bullet in bullets)
@@ -171,6 +179,13 @@ class Program
 
         // Draw player health bar
         DrawHealthBar(0, 0, playerShip.width, playerShip.height, playerShip.health, playerShip.maxHealth);
+
+        // Draw enemies health bar
+        foreach (var enemy in enemies)
+        {
+            DrawHealthBar(enemy.x - (int)playerShip.x, -enemy.y + (int)playerShip.y, enemy.width, enemy.height, enemy.health, enemy.maxHealth);
+        }
+
     }
     static void DrawHealthBar(float x, float y, int width, int height, int health, int maxHealth)
     {
@@ -231,4 +246,5 @@ enum ShipType
 {
     Arrow,
     Mouse,
+    Enemy
 }
