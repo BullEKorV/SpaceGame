@@ -9,7 +9,7 @@ class Program
     {
         SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, ShipType.Mouse);
 
-        List<Bullet> bullets = new List<Bullet>();
+        // List<Bullet> bullets = new List<Bullet>();
 
         List<SpaceShip> enemies = new List<SpaceShip>();
 
@@ -29,24 +29,20 @@ class Program
             Raylib.ClearBackground(Color.BLACK);
 
             // Control player and spawn bullets
-            var playerControl = PlayerControl(playerShip, bullets);
-            playerShip = playerControl.Item1;
-            bullets = playerControl.Item2;
+            playerShip = PlayerControl(playerShip);
 
             // Enemy AI
-            var enemyData = EnemyScript.EnemyCode(enemies, playerShip, bullets, Textures);
-            enemies = enemyData.Item1;
-            bullets = enemyData.Item2;
+            enemies = EnemyScript.EnemyCode(enemies, playerShip, Textures);
 
             // Update bullets position
-            BulletScript.MoveBullets(bullets, playerShip);
+            Bullet.Move();
 
             // Check collision
-            CheckCollision(bullets, playerShip, enemies);
+            CheckCollision(Bullet.allBullets, playerShip, enemies);
 
 
             // Render world
-            RenderWorld(Textures, playerShip, enemies, bullets);
+            RenderWorld(Textures, playerShip, enemies, Bullet.allBullets);
 
             // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
 
@@ -92,7 +88,7 @@ class Program
 
         }
     }
-    static (SpaceShip, List<Bullet>) PlayerControl(SpaceShip playerShip, List<Bullet> bullets)
+    static SpaceShip PlayerControl(SpaceShip playerShip)
     {
         // Arrow control
         if (playerShip.type == ShipType.Arrow)
@@ -112,14 +108,20 @@ class Program
         // Spawn bullet
         if ((Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Arrow))
         {
-            BulletScript.SpawnBullet(bullets, playerShip.x, playerShip.y, playerShip.rotation, playerShip.height / 2);
+            Bullet.SpawnBullet(playerShip.x, playerShip.y, playerShip.rotation, playerShip.height / 2);
         }
 
         // Calculate velocity
         if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.type == ShipType.Arrow))
-            playerShip.velocity += 0.04f;
+            playerShip.velocity += 0.06f;
+        // Calculate velocity backwards
+        else if ((Raylib.IsKeyDown(KeyboardKey.KEY_S) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) && playerShip.type == ShipType.Arrow))
+            playerShip.velocity -= 0.06f;
         else playerShip.velocity *= 0.97f;
-        if (playerShip.velocity > 5) // Constraint max velocity
+
+        if (playerShip.velocity < -5) // Constraint max velocity
+            playerShip.velocity = -5;
+        else if (playerShip.velocity > 5) // Constraint max velocity
             playerShip.velocity = 5;
 
 
@@ -132,7 +134,7 @@ class Program
         playerShip.x = newPos.x;
         playerShip.y = newPos.y;
 
-        return (playerShip, bullets);
+        return playerShip;
     }
     static public float LookAt(float x1, float y1, float x2, float y2)
     {
@@ -233,6 +235,7 @@ class Program
 }
 class SpaceShip
 {
+    public static SpaceShip playerShip;
     public float x;
     public float y;
     public int width;
@@ -252,6 +255,8 @@ class SpaceShip
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.type = type;
+        if (type == ShipType.Arrow || type == ShipType.Mouse)
+            playerShip = this;
     }
 }
 

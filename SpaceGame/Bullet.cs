@@ -3,29 +3,6 @@ using System.Collections.Generic;
 using Raylib_cs;
 class BulletScript
 {
-    public static List<Bullet> MoveBullets(List<Bullet> bullets, SpaceShip playerShip)
-    {
-        foreach (Bullet bullet in bullets)
-        {
-            // Delete bullet if too far away
-            if (Math.Abs(bullet.y - playerShip.y) > 1200 || Math.Abs(bullet.x - playerShip.x) > 1500)
-            {
-                bullets.Remove(bullet);
-                break;
-            }
-
-            // bullet.rotation = Program.LookAt(bullet.x, bullet.y, playerShip.x, playerShip.y);
-
-            var newPos = Program.CalculatePosition(bullet.x, bullet.y, bullet.velocity, bullet.rotation);
-            float xPos = newPos.x;
-            float yPos = newPos.y;
-
-            bullet.x = xPos;
-            bullet.y = yPos;
-            // Console.WriteLine(xPos + " " + yPos + " " + playerShip.x + " " + playerShip.y);
-        }
-        return bullets;
-    }
     public static List<Bullet> SpawnBullet(List<Bullet> bullets, float x, float y, float rotation, int shipHeight)
     {
         var pos = Program.CalculatePosition(x, y, shipHeight, rotation);
@@ -34,16 +11,27 @@ class BulletScript
 
         bullets.Add(new Bullet(xPos, yPos, rotation, 14, "player"));
 
+        // Calculate x and y velocity
+        var newVelocity = Program.CalculatePosition(0, 0, 14, rotation);
+        float xVelocity = newVelocity.x;
+        float yVelocity = newVelocity.y;
+
+        bullets[bullets.Count - 1].xVelocity = xVelocity;
+        bullets[bullets.Count - 1].yVelocity = yVelocity;
+
         return bullets;
     }
 }
 
 class Bullet
 {
+    public static List<Bullet> allBullets = new List<Bullet>();
     public float x;
     public float y;
     public float rotation;
     public float velocity;
+    public float xVelocity;
+    public float yVelocity;
     public string type;
     public Bullet(float x, float y, float rotation, float velocity, string type)
     {
@@ -52,5 +40,38 @@ class Bullet
         this.y = y;
         this.velocity = velocity;
         this.type = type;
+        allBullets.Add(this);
+    }
+    public static void Move()
+    {
+        foreach (Bullet bullet in allBullets)
+        {
+            // Delete bullet if too far away
+            if (Math.Abs(bullet.y - SpaceShip.playerShip.y) > 1200 || Math.Abs(bullet.x - SpaceShip.playerShip.x) > 1500)
+            {
+                allBullets.Remove(bullet);
+                break;
+            }
+
+            bullet.x += bullet.xVelocity;
+            bullet.y += bullet.yVelocity;
+            // Console.WriteLine(xPos + " " + yPos + " " + playerShip.x + " " + playerShip.y);
+        }
+    }
+    public static void SpawnBullet(float x, float y, float rotation, int shipHeight)
+    {
+        var pos = Program.CalculatePosition(x, y, shipHeight, rotation);
+        float xPos = pos.x;
+        float yPos = pos.y;
+
+        allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
+
+        // Calculate x and y velocity
+        var newVelocity = Program.CalculatePosition(0, 0, allBullets[allBullets.Count - 1].velocity, rotation);
+        float xVelocity = newVelocity.x;
+        float yVelocity = newVelocity.y;
+
+        allBullets[allBullets.Count - 1].xVelocity = xVelocity;
+        allBullets[allBullets.Count - 1].yVelocity = yVelocity;
     }
 }
