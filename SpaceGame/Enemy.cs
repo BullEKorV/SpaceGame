@@ -8,7 +8,7 @@ class EnemyScript
     public static List<SpaceShip> EnemyCode(List<SpaceShip> enemies, SpaceShip playerShip, Dictionary<String, Texture2D> Textures)
     {
         // Spawn enemy
-        if (enemies.Count < 5)
+        if (enemies.Count < 2)
             SpawnEnemy(enemies, playerShip, Textures["PlayerShip"]);
 
         // Enemy AI
@@ -23,7 +23,7 @@ class EnemyScript
     {
         enemy.rotation = Program.LookAt(enemy.x, enemy.y, playerShip.x, playerShip.y);
 
-        Console.WriteLine(Math.Abs(enemy.y - playerShip.y) + Math.Abs(enemy.x - playerShip.x));
+        // Console.WriteLine(Math.Abs(enemy.y - playerShip.y) + Math.Abs(enemy.x - playerShip.x));
 
         float distanceToPlayer = Math.Abs(enemy.y - playerShip.y) + Math.Abs(enemy.x - playerShip.x);
 
@@ -45,7 +45,7 @@ class EnemyScript
             enemy.timeSinceShot++;
             if (enemy.timeSinceShot > 50)
             {
-                Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height);
+                Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2);
                 enemy.timeSinceShot = 0;
             }
             enemy.velocity *= 0.98f;

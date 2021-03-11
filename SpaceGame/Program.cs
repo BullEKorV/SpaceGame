@@ -86,6 +86,21 @@ class Program
                 bullets.Remove(bullets[i]);
             }
 
+            for (int y = 0; y < enemies.Count; y++)
+            {
+
+
+                // Raylib.DrawCircle((int)(bullet.x - playerShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + playerShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
+                // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, playerShip.width / 2, Color.RED);
+
+
+                if (distanceBetweenCirclesSquared < (enemies[y].width / 2 + 10) * (enemies[y].width / 2 + 10))
+                {
+                    enemies[y].health--;
+                    bullets.Remove(bullets[i]);
+                }
+            }
+
         }
     }
     static SpaceShip PlayerControl(SpaceShip playerShip)
