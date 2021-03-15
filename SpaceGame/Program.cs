@@ -29,7 +29,7 @@ class Program
             Raylib.ClearBackground(Color.BLACK);
 
             // Control player and spawn bullets
-            playerShip = PlayerControl(playerShip);
+            playerShip.PlayerControl();
 
             // Enemy AI
             enemies = EnemyScript.EnemyCode(enemies, playerShip, Textures);
@@ -38,8 +38,8 @@ class Program
             Bullet.Move();
 
             // Check collision
-            CheckCollision(Bullet.allBullets, playerShip, enemies);
-
+            if (CheckCollision(playerShip, Bullet.allBullets))
+                playerShip.health--;
 
             // Render world
             RenderWorld(Textures, playerShip, enemies, Bullet.allBullets);
@@ -49,21 +49,21 @@ class Program
             Raylib.EndDrawing();
         }
     }
-    static void CheckCollision(List<Bullet> bullets, SpaceShip playerShip, List<SpaceShip> enemies)
+    public static bool CheckCollision(SpaceShip testShip, List<Bullet> bullets)
     {
-        // double radians = (Math.PI / 180) * playerShip.rotation;
+        // double radians = (Math.PI / 180) * testShip.rotation;
 
-        // float p1X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p1Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p1X = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
+        // float p1Y = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
 
-        // float p2X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p2Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p2X = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
+        // float p2Y = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
 
-        // float p3X = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p3Y = (float)((playerShip.x - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p3X = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
+        // float p3Y = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
 
-        // float p4X = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Cos(radians) - (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Sin(radians));
-        // float p4Y = (float)((playerShip.x + playerShip.width - (playerShip.x + playerShip.width / 2)) * Math.Sin(radians) + (playerShip.y + playerShip.height - (playerShip.y + playerShip.height / 2)) * Math.Cos(radians));
+        // float p4X = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
+        // float p4Y = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
 
         // Raylib.DrawRectangle((int)p1X + Raylib.GetScreenWidth() / 2, (int)p1Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.RED);
         // Raylib.DrawRectangle((int)p2X + Raylib.GetScreenWidth() / 2, (int)p2Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.DARKGRAY);
@@ -73,83 +73,19 @@ class Program
         for (int i = 0; i < bullets.Count; i++)
         {
             float distanceBetweenCirclesSquared =
-            (bullets[i].x - playerShip.x) * (bullets[i].x - playerShip.x) +
-            (bullets[i].y - playerShip.y) * (bullets[i].y - playerShip.y);
+            (bullets[i].x - testShip.x) * (bullets[i].x - testShip.x) +
+            (bullets[i].y - testShip.y) * (bullets[i].y - testShip.y);
 
-            // Raylib.DrawCircle((int)(bullet.x - playerShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + playerShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
-            // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, playerShip.width / 2, Color.RED);
+            // Raylib.DrawCircle((int)(bullet.x - testShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + testShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
+            // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, testShip.width / 2, Color.RED);
 
-
-            if (distanceBetweenCirclesSquared < (playerShip.width / 2 + 10) * (playerShip.width / 2 + 10))
+            if (distanceBetweenCirclesSquared < (testShip.width / 2 + 10) * (testShip.width / 2 + 10))
             {
-                playerShip.health--;
                 bullets.Remove(bullets[i]);
+                return true;
             }
-
-            for (int y = 0; y < enemies.Count; y++)
-            {
-
-
-                // Raylib.DrawCircle((int)(bullet.x - playerShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + playerShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
-                // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, playerShip.width / 2, Color.RED);
-
-
-                if (distanceBetweenCirclesSquared < (enemies[y].width / 2 + 10) * (enemies[y].width / 2 + 10))
-                {
-                    enemies[y].health--;
-                    bullets.Remove(bullets[i]);
-                }
-            }
-
         }
-    }
-    static SpaceShip PlayerControl(SpaceShip playerShip)
-    {
-        // Arrow control
-        if (playerShip.type == ShipType.Arrow)
-        {
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
-                playerShip.rotationVelocity += 0.2f;
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
-                playerShip.rotationVelocity -= 0.2f;
-        }
-        // Mouse control
-        else if (playerShip.type == ShipType.Mouse)
-        {
-            // Make ship look at player
-            playerShip.rotation = LookAt(playerShip.x + Raylib.GetScreenWidth() / 2, playerShip.y - Raylib.GetScreenHeight() / 2, playerShip.x + Raylib.GetMouseX(), playerShip.y - Raylib.GetMouseY());
-        }
-
-        // Spawn bullet
-        if ((Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Arrow))
-        {
-            Bullet.SpawnBullet(playerShip.x, playerShip.y, playerShip.rotation, playerShip.height / 2);
-        }
-
-        // Calculate velocity
-        if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.type == ShipType.Arrow))
-            playerShip.velocity += 0.06f;
-        // Calculate velocity backwards
-        else if ((Raylib.IsKeyDown(KeyboardKey.KEY_S) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) && playerShip.type == ShipType.Arrow))
-            playerShip.velocity -= 0.06f;
-        else playerShip.velocity *= 0.97f;
-
-        if (playerShip.velocity < -5) // Constraint max velocity
-            playerShip.velocity = -5;
-        else if (playerShip.velocity > 5) // Constraint max velocity
-            playerShip.velocity = 5;
-
-
-        // Calculate new rotation
-        playerShip.rotation = CalculateRotation(playerShip.rotation, playerShip.rotationVelocity);
-        playerShip.rotationVelocity *= 0.95f; // Slow down rotation
-
-        // Calculate new position
-        var newPos = CalculatePosition(playerShip.x, playerShip.y, playerShip.velocity, playerShip.rotation);
-        playerShip.x = newPos.x;
-        playerShip.y = newPos.y;
-
-        return playerShip;
+        return false;
     }
     static public float LookAt(float x1, float y1, float x2, float y2)
     {
@@ -164,7 +100,7 @@ class Program
 
         return angle;
     }
-    static float CalculateRotation(float rotation, float rotationVelocity)
+    static public float CalculateRotation(float rotation, float rotationVelocity)
     {
         rotation += rotationVelocity;
 
@@ -272,6 +208,52 @@ class SpaceShip
         this.type = type;
         if (type == ShipType.Arrow || type == ShipType.Mouse)
             playerShip = this;
+    }
+    public void PlayerControl()
+    {
+        // Arrow control
+        if (playerShip.type == ShipType.Arrow)
+        {
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
+                playerShip.rotationVelocity += 0.2f;
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
+                playerShip.rotationVelocity -= 0.2f;
+        }
+        // Mouse control
+        else if (playerShip.type == ShipType.Mouse)
+        {
+            // Make ship look at player
+            playerShip.rotation = Program.LookAt(playerShip.x + Raylib.GetScreenWidth() / 2, playerShip.y - Raylib.GetScreenHeight() / 2, playerShip.x + Raylib.GetMouseX(), playerShip.y - Raylib.GetMouseY());
+        }
+
+        // Spawn bullet
+        if ((Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Arrow))
+        {
+            Bullet.SpawnBullet(playerShip.x, playerShip.y, playerShip.rotation, playerShip.height / 2);
+        }
+
+        // Calculate velocity
+        if ((Raylib.IsKeyDown(KeyboardKey.KEY_SPACE) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_UP) && playerShip.type == ShipType.Arrow))
+            playerShip.velocity += 0.06f;
+        // Calculate velocity backwards
+        else if ((Raylib.IsKeyDown(KeyboardKey.KEY_S) && playerShip.type == ShipType.Mouse) || (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) && playerShip.type == ShipType.Arrow))
+            playerShip.velocity -= 0.06f;
+        else playerShip.velocity *= 0.97f;
+
+        if (playerShip.velocity < -5) // Constraint max velocity
+            playerShip.velocity = -5;
+        else if (playerShip.velocity > 5) // Constraint max velocity
+            playerShip.velocity = 5;
+
+
+        // Calculate new rotation
+        playerShip.rotation = Program.CalculateRotation(playerShip.rotation, playerShip.rotationVelocity);
+        playerShip.rotationVelocity *= 0.95f; // Slow down rotation
+
+        // Calculate new position
+        var newPos = Program.CalculatePosition(playerShip.x, playerShip.y, playerShip.velocity, playerShip.rotation);
+        playerShip.x = newPos.x;
+        playerShip.y = newPos.y;
     }
 }
 

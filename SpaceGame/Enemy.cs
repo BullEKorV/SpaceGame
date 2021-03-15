@@ -8,7 +8,7 @@ class EnemyScript
     public static List<SpaceShip> EnemyCode(List<SpaceShip> enemies, SpaceShip playerShip, Dictionary<String, Texture2D> Textures)
     {
         // Spawn enemy
-        if (enemies.Count < 2)
+        if (enemies.Count < 1)
             SpawnEnemy(enemies, playerShip, Textures["PlayerShip"]);
 
         // Enemy AI
@@ -36,9 +36,9 @@ class EnemyScript
         }
         else if (distanceToPlayer < 350)
         {
-            enemy.velocity -= 0.05f;
-            if (enemy.velocity < -3)
-                enemy.velocity = -3;
+            enemy.velocity -= 0.1f;
+            if (enemy.velocity < -6)
+                enemy.velocity = -6;
         }
         else
         {
@@ -55,6 +55,8 @@ class EnemyScript
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
+        if (Program.CheckCollision(enemy, Bullet.allBullets))
+            enemy.health--;
 
         return enemy;
     }
