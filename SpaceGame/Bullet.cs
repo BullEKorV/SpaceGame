@@ -60,14 +60,14 @@ class Bullet
     }
     public static void SpawnBullet(float x, float y, float rotation, int shipHeight)
     {
-        var pos = Program.CalculatePosition(x, y, shipHeight, rotation);
+        var pos = Program.CalculatePositionVelocity(x, y, shipHeight, rotation);
         float xPos = pos.x;
         float yPos = pos.y;
 
         allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
 
         // Calculate x and y velocity
-        var newVelocity = Program.CalculatePosition(0, 0, allBullets[allBullets.Count - 1].velocity, rotation);
+        var newVelocity = Program.CalculatePositionVelocity(0, 0, allBullets[allBullets.Count - 1].velocity, rotation);
         float xVelocity = newVelocity.x;
         float yVelocity = newVelocity.y;
 
