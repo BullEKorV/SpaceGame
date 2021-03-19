@@ -51,7 +51,7 @@ class EnemyScript
             enemy.velocity *= 0.98f;
         }
 
-        var newPos = Program.CalculatePosition(enemy.x, enemy.y, enemy.velocity, enemy.rotation);
+        var newPos = Program.CalculatePositionVelocity(enemy.x, enemy.y, enemy.velocity, enemy.rotation);
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
