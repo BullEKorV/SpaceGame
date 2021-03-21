@@ -193,6 +193,8 @@ class SpaceShip
     public int health;
     public int maxHealth;
     public int timeSinceShot;
+    private bool left, right, up, down;
+    private float speed = 0.22f;
     public ShipType type;
     public SpaceShip(float x, float y, float rotation, int maxHealth, ShipType type)
     {
@@ -222,35 +224,57 @@ class SpaceShip
         }
         playerShip.timeSinceShot++;
 
+        // Check keypresses
+        KeyPresses();
+
         // Calculate velocity
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && playerShip.type == ShipType.Player)
-            playerShip.yVelocity += 0.1f;
-        else if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && playerShip.type == ShipType.Player)
-            playerShip.yVelocity -= 0.1f;
-        else playerShip.yVelocity *= 0.98f;
-
-
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_D) && playerShip.type == ShipType.Player)
-            playerShip.xVelocity += 0.1f;
-        else if (Raylib.IsKeyDown(KeyboardKey.KEY_A) && playerShip.type == ShipType.Player)
-            playerShip.xVelocity -= 0.1f;
-        else playerShip.xVelocity *= 0.98f;
+        CalculateVelocity();
 
         // Constraint velocities
-        if (playerShip.xVelocity < -5) // Constraint max velocity
-            playerShip.xVelocity = -5;
-        else if (playerShip.xVelocity > 5) // Constraint max velocity
-            playerShip.xVelocity = 5;
+        // if (playerShip.xVelocity < -5) // Constraint max velocity
+        //     playerShip.xVelocity = -5;
+        // else if (playerShip.xVelocity > 5) // Constraint max velocity
+        //     playerShip.xVelocity = 5;
 
-        if (playerShip.yVelocity < -5) // Constraint max velocity
-            playerShip.yVelocity = -5;
-        else if (playerShip.yVelocity > 5) // Constraint max velocity
-            playerShip.yVelocity = 5;
+        // if (playerShip.yVelocity < -5) // Constraint max velocity
+        //     playerShip.yVelocity = -5;
+        // else if (playerShip.yVelocity > 5) // Constraint max velocity
+        //     playerShip.yVelocity = 5;
 
         // Calculate new position
         var newPos = Program.CalculatePosition(playerShip.x, playerShip.y, playerShip.xVelocity, playerShip.yVelocity);
         playerShip.x = newPos.x;
         playerShip.y = newPos.y;
+
+        playerShip.xVelocity *= 0.96f;
+        playerShip.yVelocity *= 0.96f;
+
+    }
+    public void KeyPresses()
+    {
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && playerShip.type == ShipType.Player)
+            up = true;
+        else up = false;
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && playerShip.type == ShipType.Player)
+            down = true;
+        else down = false;
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_A) && playerShip.type == ShipType.Player)
+            left = true;
+        else left = false;
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_D) && playerShip.type == ShipType.Player)
+            right = true;
+        else right = false;
+    }
+    public void CalculateVelocity()
+    {
+        if (up)
+            yVelocity += speed;
+        if (down)
+            yVelocity -= speed;
+        if (left)
+            xVelocity -= speed;
+        if (right)
+            xVelocity += speed;
     }
 }
 
