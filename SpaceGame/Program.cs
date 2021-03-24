@@ -9,8 +9,6 @@ class Program
     {
         SpaceShip playerShip = new SpaceShip(0, 0, 90, 100, ShipType.Player);
 
-        // List<Bullet> bullets = new List<Bullet>();
-
         List<SpaceShip> enemies = new List<SpaceShip>();
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
@@ -22,8 +20,12 @@ class Program
         playerShip.width = Textures["PlayerShip"].width;
         playerShip.height = Textures["PlayerShip"].height;
 
+
         while (!Raylib.WindowShouldClose())
         {
+            // Draw logic
+            Star.StarLogic();
+
             // Control player and spawn bullets
             playerShip.PlayerControl();
 
@@ -121,6 +123,12 @@ class Program
     {
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
 
+        // Draw stars
+        foreach (var star in Star.allStars)
+        {
+            DrawObjectRotation(Textures["Star"], star.x - playerShip.x, star.y + playerShip.y, star.rotation);
+        }
+
         Raylib.DrawRectangle((int)(-playerShip.x - 50f), (int)(playerShip.y - 50f), 100, 100, Color.GREEN);
 
         // Draw player
@@ -174,7 +182,8 @@ class Program
     {
         Dictionary<String, Texture2D> Textures = new Dictionary<string, Texture2D>();
         Textures.Add("PlayerShip", Raylib.LoadTexture("Textures/PlayerShip.png")); // Player ship
-        Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Player ship
+        Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
+        Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 
         return Textures;
     }

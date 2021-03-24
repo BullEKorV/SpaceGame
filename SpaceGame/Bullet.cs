@@ -1,28 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Raylib_cs;
-class BulletScript
-{
-    public static List<Bullet> SpawnBullet(List<Bullet> bullets, float x, float y, float rotation, int shipHeight)
-    {
-        var pos = Program.CalculatePosition(x, y, shipHeight, rotation);
-        float xPos = pos.x;
-        float yPos = pos.y;
-
-        bullets.Add(new Bullet(xPos, yPos, rotation, 14, "player"));
-
-        // Calculate x and y velocity
-        var newVelocity = Program.CalculatePosition(0, 0, 14, rotation);
-        float xVelocity = newVelocity.x;
-        float yVelocity = newVelocity.y;
-
-        bullets[bullets.Count - 1].xVelocity = xVelocity;
-        bullets[bullets.Count - 1].yVelocity = yVelocity;
-
-        return bullets;
-    }
-}
-
 class Bullet
 {
     public static List<Bullet> allBullets = new List<Bullet>();
