@@ -45,8 +45,6 @@ class Program
             // Render world
             RenderWorld(Textures, playerShip, enemies, Bullet.allBullets);
 
-            // Console.WriteLine((int)playerShip.x + " " + (int)playerShip.y + " " + playerShip.rotation);
-
             Raylib.EndDrawing();
         }
     }
@@ -122,12 +120,6 @@ class Program
     static void RenderWorld(Dictionary<String, Texture2D> Textures, SpaceShip playerShip, List<SpaceShip> enemies, List<Bullet> bullets) // RenderWorld
     {
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
-
-        // Draw stars
-        foreach (var star in Star.allStars)
-        {
-            DrawObjectRotation(Textures["Star"], star.x - playerShip.x, star.y + playerShip.y, star.rotation);
-        }
 
         Raylib.DrawRectangle((int)(-playerShip.x - 50f), (int)(playerShip.y - 50f), 100, 100, Color.GREEN);
 

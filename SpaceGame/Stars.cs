@@ -24,9 +24,8 @@ class Star
         {
             chunkX = (int)Math.Round(SpaceShip.playerShip.x / Raylib.GetScreenWidth());
             chunkY = (int)Math.Round(SpaceShip.playerShip.y / Raylib.GetScreenHeight());
-            // SpawnStars(chunkX, chunkY);
+            SpawnStars(chunkX, chunkY);
         }
-
 
         DrawStars(chunkX, chunkY);
 
