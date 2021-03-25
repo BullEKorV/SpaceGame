@@ -3,7 +3,7 @@ using Raylib_cs;
 using System.Collections.Generic;
 class Star
 {
-    public static List<Star> allStars = new List<Star>();
+    public static Dictionary<String, List<Star>> allStarsChunks = new Dictionary<String, List<Star>>();
     public float x;
     public float y;
     public int size;
@@ -14,40 +14,73 @@ class Star
         this.y = y;
         this.size = size;
         this.rotation = rotation;
-
-        allStars.Add(this);
     }
-
+    static int chunkX = 1;
+    static int chunkY = 1;
     public static void StarLogic()
     {
-        SpawnStars();
-        DeleteStars();
+        // TO DO... Only play when entering new chunk
+        if (chunkX != (int)Math.Round(SpaceShip.playerShip.x / Raylib.GetScreenWidth()) || chunkY != (int)Math.Round(SpaceShip.playerShip.y / Raylib.GetScreenHeight()))
+        {
+            chunkX = (int)Math.Round(SpaceShip.playerShip.x / Raylib.GetScreenWidth());
+            chunkY = (int)Math.Round(SpaceShip.playerShip.y / Raylib.GetScreenHeight());
+            // SpawnStars(chunkX, chunkY);
+        }
+
+
+        DrawStars(chunkX, chunkY);
+
+        // Console.WriteLine(Raylib.GetFPS());
+
+        // Console.WriteLine(allStarsChunks.Count);
     }
 
-    public static void SpawnStars()
+    public static void SpawnStars(int chunkX, int chunkY)
     {
-        int maxStars = 100;
-        for (int i = allStars.Count; i < maxStars; i++)
+        // Console.WriteLine(Raylib.GetFrameTime());
+        var rnd = new Random();
+        int maxStarsPerChunk = 10;
+
+        for (int x = -1; x <= 1; x++)
         {
-            var rnd = new Random();
+            for (int y = -1; y <= 1; y++)
+            {
+                if (!allStarsChunks.ContainsKey((chunkX + x) + "-" + (chunkY + y)))
+                {
+                    List<Star> allStarsInChunk = new List<Star>();
+                    for (int i = 0; i < maxStarsPerChunk; i++)
+                    {
+                        float tempX = rnd.Next((chunkX + x) * Raylib.GetScreenWidth(), (chunkX + x) * Raylib.GetScreenWidth() + Raylib.GetScreenWidth());
+                        float tempY = rnd.Next((chunkY + y) * -Raylib.GetScreenHeight(), (chunkY + y) * -Raylib.GetScreenHeight() + Raylib.GetScreenHeight());
 
-            float tempX = rnd.Next((int)SpaceShip.playerShip.x - Raylib.GetScreenWidth() / 2, (int)SpaceShip.playerShip.x + Raylib.GetScreenWidth() / 2);
-            float tempY = rnd.Next((int)SpaceShip.playerShip.y - Raylib.GetScreenHeight() / 2, (int)SpaceShip.playerShip.y + Raylib.GetScreenHeight() / 2);
+                        int tempSize = rnd.Next(6, 24);
 
-            int tempSize = rnd.Next(10, 20);
+                        int tempRotation = rnd.Next(0, 360);
 
-            int tempRotation = rnd.Next(0, 360);
-
-            allStars.Add(new Star(tempX, tempY, tempSize, tempRotation));
+                        allStarsInChunk.Add(new Star(tempX, tempY, tempSize, tempRotation));
+                    }
+                    allStarsChunks.Add((chunkX + x) + "-" + (chunkY + y), allStarsInChunk); // New star
+                }
+            }
         }
     }
-    public static void DeleteStars()
+    public static void DrawStars(int chunkX, int chunkY)
     {
-        for (int i = 0; i < allStars.Count; i++)
+        // Console.WriteLine(chunkX);
+        for (int i = 0; i < allStarsChunks.Count; i++)
         {
-            if (Math.Abs(allStars[i].y - SpaceShip.playerShip.y) > Raylib.GetScreenHeight() / 2 + 100 || Math.Abs(allStars[i].x - SpaceShip.playerShip.x) > Raylib.GetScreenWidth() / 2 + 100)
+            for (int x = -1; x <= 1; x++)
             {
-                allStars.Remove(allStars[i]);
+                for (int y = -1; y <= 1; y++)
+                {
+                    // if (allStarsChunks.ContainsKey((chunkX + x) + "-" + (chunkY + y)))
+                    // {
+                    foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
+                    {
+                        Raylib.DrawRectangle((int)star.x - (int)SpaceShip.playerShip.x, (int)star.y + (int)SpaceShip.playerShip.y, star.size, star.size, Color.YELLOW);
+                    }
+                    // }
+                }
             }
         }
     }
