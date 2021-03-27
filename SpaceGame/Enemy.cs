@@ -3,40 +3,61 @@ using System.Numerics;
 using System.Collections.Generic;
 using Raylib_cs;
 
-class EnemyScript
+class EnemyShip
 {
-    public static List<SpaceShip> EnemyCode(List<SpaceShip> enemies, SpaceShip playerShip, Dictionary<String, Texture2D> Textures)
+    public static List<EnemyShip> allEnemies = new List<EnemyShip>();
+    public float x;
+    public float y;
+    public int width;
+    public int height;
+    public float velocity;
+    public float rotation;
+    public int health;
+    public int maxHealth;
+    public int timeSinceShot;
+    private float speed = 0.02f;
+    public EnemyShip(float x, float y, float rotation, int maxHealth)
     {
-        // Spawn enemy
-        if (enemies.Count < 1)
-            SpawnEnemy(enemies, playerShip, Textures["PlayerShip"]);
+        this.x = x;
+        this.y = y;
+        this.rotation = rotation;
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
 
-        // Enemy AI
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            enemies[i] = EnemyAI(enemies[i], playerShip);
-        }
-
-        return enemies;
+        allEnemies.Add(this);
     }
-    static SpaceShip EnemyAI(SpaceShip enemy, SpaceShip playerShip)
+    public static void EnemyLogic(Dictionary<String, Texture2D> Textures)
     {
-        enemy.rotation = Program.LookAt(enemy.x, enemy.y, playerShip.x, playerShip.y);
+        if (allEnemies.Count < 1)
+            SpawnEnemy(Textures["PlayerShip"]);
+
+        foreach (EnemyShip enemy in allEnemies)
+        {
+            EnemyAI(enemy);
+        }
+        // for (int i = 0; i < allEnemies.Count; i++) // Why no work?
+        // {
+        //     allEnemies[i] = EnemyAI(allEnemies[i]);
+        // }
+    }
+    static void EnemyAI(EnemyShip enemy)
+    {
+        enemy.rotation = Program.LookAt(enemy.x, enemy.y, SpaceShip.playerShip.x, SpaceShip.playerShip.y);
 
         // Console.WriteLine(Math.Abs(enemy.y - playerShip.y) + Math.Abs(enemy.x - playerShip.x));
 
-        float distanceToPlayer = Math.Abs(enemy.y - playerShip.y) + Math.Abs(enemy.x - playerShip.x);
+        float distanceToPlayer = Math.Abs(enemy.y - SpaceShip.playerShip.y) + Math.Abs(enemy.x - SpaceShip.playerShip.x);
 
         // Move closer to the player
         if (distanceToPlayer > 550)
         {
-            enemy.velocity += 0.05f;
+            enemy.velocity += enemy.speed * 4;
             if (enemy.velocity > 3)
                 enemy.velocity = 3;
         }
         else if (distanceToPlayer < 350)
         {
-            enemy.velocity -= 0.1f;
+            enemy.velocity -= enemy.speed * 7;
             if (enemy.velocity < -6)
                 enemy.velocity = -6;
         }
@@ -55,24 +76,19 @@ class EnemyScript
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
-        if (Program.CheckCollision(enemy, Bullet.allBullets))
+        if (Program.CheckCollision(enemy.x, enemy.y, enemy.width, Bullet.allBullets))
             enemy.health--;
-
-        return enemy;
     }
-    public static List<SpaceShip> SpawnEnemy(List<SpaceShip> enemies, SpaceShip playerShip, Texture2D enemyTexture)
+    static void SpawnEnemy(Texture2D enemyTexture)
     {
         float enemyX = -200;
         float enemyY = -200;
         float enemyRotation = 0;
         int enemyHealth = 100;
-        ShipType enemyType = ShipType.Enemy;
 
-        enemies.Add(new SpaceShip(enemyX, enemyY, enemyRotation, enemyHealth, enemyType));
+        new EnemyShip(enemyX, enemyY, enemyRotation, enemyHealth);
 
-        enemies[enemies.Count - 1].width = enemyTexture.width;
-        enemies[enemies.Count - 1].height = enemyTexture.height;
-
-        return enemies;
+        allEnemies[allEnemies.Count - 1].width = enemyTexture.width;
+        allEnemies[allEnemies.Count - 1].height = enemyTexture.height;
     }
 }

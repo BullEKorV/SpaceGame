@@ -42,7 +42,9 @@ class Bullet
         float xPos = pos.x;
         float yPos = pos.y;
 
-        allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
+        // allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
+        new Bullet(xPos, yPos, rotation, 20, "player");
+
 
         // Calculate x and y velocity
         var newVelocity = Program.CalculatePositionVelocity(0, 0, allBullets[allBullets.Count - 1].velocity, rotation);
