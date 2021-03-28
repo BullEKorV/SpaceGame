@@ -33,7 +33,7 @@ class Program
             // Update bullets position
             Bullet.Move();
 
-
+            // Render Frame
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.BLACK);
 
