@@ -31,22 +31,22 @@ class EnemyShip
         if (allEnemies.Count < 1)
             SpawnEnemy(Textures["PlayerShip"]);
 
-        foreach (EnemyShip enemy in allEnemies)
-        {
-            EnemyAI(enemy);
-        }
-        // for (int i = 0; i < allEnemies.Count; i++) // Why no work?
+        // foreach (EnemyShip enemy in allEnemies)
         // {
-        //     allEnemies[i] = EnemyAI(allEnemies[i]);
+        //     EnemyAI(enemy);
         // }
+        for (int i = 0; i < allEnemies.Count; i++) // Why no work?
+        {
+            EnemyAI(allEnemies[i]);
+        }
     }
     static void EnemyAI(EnemyShip enemy)
     {
-        enemy.rotation = Program.LookAt(enemy.x, enemy.y, SpaceShip.playerShip.x, SpaceShip.playerShip.y);
+        enemy.rotation = Program.LookAt(enemy.x, enemy.y, PlayerShip.ship.x, PlayerShip.ship.y);
 
         // Console.WriteLine(Math.Abs(enemy.y - playerShip.y) + Math.Abs(enemy.x - playerShip.x));
 
-        float distanceToPlayer = Math.Abs(enemy.y - SpaceShip.playerShip.y) + Math.Abs(enemy.x - SpaceShip.playerShip.x);
+        float distanceToPlayer = Math.Abs(enemy.y - PlayerShip.ship.y) + Math.Abs(enemy.x - PlayerShip.ship.x);
 
         // Move closer to the player
         if (distanceToPlayer > 550)
@@ -72,12 +72,22 @@ class EnemyShip
             enemy.velocity *= 0.98f;
         }
 
+        // Check if dead
+        if (enemy.health <= 0)
+        {
+            EnemyDead(enemy);
+        }
+
         var newPos = Program.CalculatePositionVelocity(enemy.x, enemy.y, enemy.velocity, enemy.rotation);
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
         if (Program.CheckCollision(enemy.x, enemy.y, enemy.width, Bullet.allBullets))
             enemy.health--;
+    }
+    static void EnemyDead(EnemyShip enemy)
+    {
+        allEnemies.Remove(enemy);
     }
     static void SpawnEnemy(Texture2D enemyTexture)
     {

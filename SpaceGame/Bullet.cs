@@ -25,7 +25,7 @@ class Bullet
         foreach (Bullet bullet in allBullets)
         {
             // Delete bullet if too far away
-            if (Math.Abs(bullet.y - SpaceShip.playerShip.y) > 1200 || Math.Abs(bullet.x - SpaceShip.playerShip.x) > 1500)
+            if (Math.Abs(bullet.y - PlayerShip.ship.y) > 1200 || Math.Abs(bullet.x - PlayerShip.ship.x) > 1500)
             {
                 allBullets.Remove(bullet);
                 break;

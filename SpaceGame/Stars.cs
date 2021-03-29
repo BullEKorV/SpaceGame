@@ -20,10 +20,10 @@ class Star
     public static void StarLogic()
     {
         // TO DO... Only play when entering new chunk
-        if (chunkX != (int)Math.Round(SpaceShip.playerShip.x / Raylib.GetScreenWidth()) || chunkY != (int)Math.Round(SpaceShip.playerShip.y / Raylib.GetScreenHeight()))
+        if (chunkX != (int)PlayerShip.ship.x / Raylib.GetScreenWidth() || chunkY != (int)PlayerShip.ship.y / Raylib.GetScreenHeight())
         {
-            chunkX = (int)Math.Round(SpaceShip.playerShip.x / Raylib.GetScreenWidth());
-            chunkY = (int)Math.Round(SpaceShip.playerShip.y / Raylib.GetScreenHeight());
+            chunkX = (int)PlayerShip.ship.x / Raylib.GetScreenWidth();
+            chunkY = (int)PlayerShip.ship.y / Raylib.GetScreenHeight();
             SpawnStars(chunkX, chunkY);
         }
 
@@ -39,6 +39,14 @@ class Star
         // Console.WriteLine(Raylib.GetFrameTime());
         var rnd = new Random();
 
+        int screenWidth = Raylib.GetScreenWidth();
+        int screenHeight = Raylib.GetScreenHeight();
+
+        int tempX;
+        int tempY;
+        int tempSize;
+        int tempRotation;
+
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
@@ -49,14 +57,14 @@ class Star
                     Star[] allStarsInChunk = new Star[starsPerChunk];
                     for (int i = 0; i < starsPerChunk; i++)
                     {
-                        int tempX = rnd.Next((chunkX + x) * Raylib.GetScreenWidth(), (chunkX + x) * Raylib.GetScreenWidth() + Raylib.GetScreenWidth());
-                        int tempY = rnd.Next((chunkY + y) * -Raylib.GetScreenHeight(), (chunkY + y) * -Raylib.GetScreenHeight() + Raylib.GetScreenHeight());
+                        tempX = rnd.Next((chunkX + x) * screenWidth, (chunkX + x) * screenWidth + screenWidth);
+                        tempY = rnd.Next((chunkY + y) * -screenHeight, (chunkY + y) * -screenHeight + screenHeight);
 
-                        int tempSize = rnd.Next(6, 24);
+                        tempSize = rnd.Next(6, 24);
 
-                        int tempRotation = rnd.Next(0, 360);
+                        tempRotation = rnd.Next(0, 360);
 
-                        allStarsInChunk[i] = (new Star(tempX, tempY, tempSize, tempRotation));
+                        allStarsInChunk[i] = new Star(tempX, tempY, tempSize, tempRotation);
                     }
                     allStarsChunks.Add((chunkX + x) + "-" + (chunkY + y), allStarsInChunk); // New star
                 }
@@ -76,7 +84,7 @@ class Star
                     // {
                     foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
                     {
-                        Raylib.DrawRectangle((int)star.x - (int)SpaceShip.playerShip.x, (int)star.y + (int)SpaceShip.playerShip.y, star.size, star.size, Color.YELLOW);
+                        Raylib.DrawRectangle((int)star.x - (int)PlayerShip.ship.x, (int)star.y + (int)PlayerShip.ship.y, star.size, star.size, Color.YELLOW);
                     }
                     // }
                 }

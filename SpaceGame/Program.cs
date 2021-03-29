@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        SpaceShip playerShip = new SpaceShip(0, 0, 90, 100);
+        new PlayerShip(0, 0, 90, 100);
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
@@ -15,8 +15,8 @@ class Program
         Dictionary<String, Texture2D> Textures = LoadTextures(); // Game Textures
 
         // Give width and height to playership
-        playerShip.width = Textures["PlayerShip"].width;
-        playerShip.height = Textures["PlayerShip"].height;
+        PlayerShip.ship.width = Textures["PlayerShip"].width;
+        PlayerShip.ship.height = Textures["PlayerShip"].height;
 
 
         while (!Raylib.WindowShouldClose())
@@ -25,7 +25,7 @@ class Program
             Star.StarLogic();
 
             // Control player and spawn bullets
-            playerShip.PlayerControl();
+            PlayerShip.ship.PlayerControl();
 
             // Enemy AI
             EnemyShip.EnemyLogic(Textures);
@@ -116,29 +116,29 @@ class Program
     {
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
 
-        Raylib.DrawRectangle((int)(-SpaceShip.playerShip.x - 50f), (int)(SpaceShip.playerShip.y - 50f), 100, 100, Color.GREEN);
+        Raylib.DrawRectangle((int)(-PlayerShip.ship.x - 50f), (int)(PlayerShip.ship.y - 50f), 100, 100, Color.GREEN);
 
         // Draw player
-        DrawObjectRotation(Textures["PlayerShip"], 0, 0, SpaceShip.playerShip.rotation);
+        DrawObjectRotation(Textures["PlayerShip"], 0, 0, PlayerShip.ship.rotation);
 
         foreach (var enemy in EnemyShip.allEnemies)
         {
-            DrawObjectRotation(Textures["PlayerShip"], (int)enemy.x - (int)SpaceShip.playerShip.x, -(int)enemy.y + (int)SpaceShip.playerShip.y, enemy.rotation);
+            DrawObjectRotation(Textures["PlayerShip"], (int)enemy.x - (int)PlayerShip.ship.x, -(int)enemy.y + (int)PlayerShip.ship.y, enemy.rotation);
         }
 
         // Draw bullets
         foreach (var bullet in Bullet.allBullets)
         {
-            DrawObjectRotation(Textures["Laser"], (int)bullet.x - (int)SpaceShip.playerShip.x, -(int)bullet.y + (int)SpaceShip.playerShip.y, bullet.rotation);
+            DrawObjectRotation(Textures["Laser"], (int)bullet.x - (int)PlayerShip.ship.x, -(int)bullet.y + (int)PlayerShip.ship.y, bullet.rotation);
         }
 
         // Draw player health bar
-        DrawHealthBar(0, 0, SpaceShip.playerShip.width, SpaceShip.playerShip.height, SpaceShip.playerShip.health, SpaceShip.playerShip.maxHealth);
+        DrawHealthBar(0, 0, PlayerShip.ship.width, PlayerShip.ship.height, PlayerShip.ship.health, PlayerShip.ship.maxHealth);
 
         // Draw enemies health bar
         foreach (var enemy in EnemyShip.allEnemies)
         {
-            DrawHealthBar(enemy.x - (int)SpaceShip.playerShip.x, -enemy.y + (int)SpaceShip.playerShip.y, enemy.width, enemy.height, enemy.health, enemy.maxHealth);
+            DrawHealthBar(enemy.x - (int)PlayerShip.ship.x, -enemy.y + (int)PlayerShip.ship.y, enemy.width, enemy.height, enemy.health, enemy.maxHealth);
         }
 
     }
@@ -150,7 +150,7 @@ class Program
 
         Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2, (int)y - height / 2 + Raylib.GetScreenHeight() / 2, width, 30, Color.WHITE);
 
-        Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)y - height / 2 + Raylib.GetScreenHeight() / 2 + borderOffset, (int)(width * percentOfHealthLeft - (borderOffset * 2)), 30 - borderOffset * 2, Color.RED);
+        Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)y - height / 2 + Raylib.GetScreenHeight() / 2 + borderOffset, (int)((width - (borderOffset * 2)) * percentOfHealthLeft), 30 - borderOffset * 2, Color.RED);
     }
     static void DrawObjectRotation(Texture2D texture, float x, float y, float rotation)
     {
