@@ -24,19 +24,12 @@ class Star
         {
             chunkX = (int)PlayerShip.ship.x / Raylib.GetScreenWidth();
             chunkY = (int)PlayerShip.ship.y / Raylib.GetScreenHeight();
-            SpawnStars(chunkX, chunkY);
+            SpawnStars();
         }
-
-        DrawStars(chunkX, chunkY);
-
-        // Console.WriteLine(Raylib.GetFPS());
-
-        // Console.WriteLine(allStarsChunks.Count);
     }
 
-    public static void SpawnStars(int chunkX, int chunkY)
+    public static void SpawnStars()
     {
-        // Console.WriteLine(Raylib.GetFrameTime());
         var rnd = new Random();
 
         int screenWidth = Raylib.GetScreenWidth();
@@ -71,7 +64,7 @@ class Star
             }
         }
     }
-    public static void DrawStars(int chunkX, int chunkY)
+    public static void DrawStars()
     {
         // Console.WriteLine(chunkX);
         for (int i = 0; i < allStarsChunks.Count; i++)

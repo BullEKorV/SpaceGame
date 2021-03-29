@@ -18,22 +18,21 @@ class Bullet
         this.y = y;
         this.velocity = velocity;
         this.type = type;
+
         allBullets.Add(this);
     }
     public static void Move()
     {
-        foreach (Bullet bullet in allBullets)
+        for (int i = 0; i < allBullets.Count; i++)
         {
-            // Delete bullet if too far away
-            if (Math.Abs(bullet.y - PlayerShip.ship.y) > 1200 || Math.Abs(bullet.x - PlayerShip.ship.x) > 1500)
-            {
-                allBullets.Remove(bullet);
-                break;
-            }
+            allBullets[i].x += allBullets[i].xVelocity;
+            allBullets[i].y += allBullets[i].yVelocity;
 
-            bullet.x += bullet.xVelocity;
-            bullet.y += bullet.yVelocity;
-            // Console.WriteLine(xPos + " " + yPos + " " + playerShip.x + " " + playerShip.y);
+            // Delete bullet if too far away
+            if (Math.Abs(allBullets[i].y - PlayerShip.ship.y) > 1200 || Math.Abs(allBullets[i].x - PlayerShip.ship.x) > 1500)
+            {
+                allBullets.Remove(allBullets[i]);
+            }
         }
     }
     public static void SpawnBullet(float x, float y, float rotation, int shipHeight)
@@ -44,7 +43,6 @@ class Bullet
 
         // allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
         new Bullet(xPos, yPos, rotation, 20, "player");
-
 
         // Calculate x and y velocity
         var newVelocity = Program.CalculatePositionVelocity(0, 0, allBullets[allBullets.Count - 1].velocity, rotation);

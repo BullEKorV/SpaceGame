@@ -44,17 +44,6 @@ class PlayerShip
         // Calculate velocity
         CalculateVelocity();
 
-        // Constraint velocities
-        // if (ship.xVelocity < -5) // Constraint max velocity
-        //     ship.xVelocity = -5;
-        // else if (ship.xVelocity > 5) // Constraint max velocity
-        //     ship.xVelocity = 5;
-
-        // if (ship.yVelocity < -5) // Constraint max velocity
-        //     ship.yVelocity = -5;
-        // else if (ship.yVelocity > 5) // Constraint max velocity
-        //     ship.yVelocity = 5;
-
         // Calculate new position
         var newPos = Program.CalculatePosition(ship.x, ship.y, ship.xVelocity, ship.yVelocity);
         ship.x = newPos.x;
@@ -64,7 +53,7 @@ class PlayerShip
         ship.yVelocity *= 0.96f;
 
         // Check collision
-        if (Program.CheckCollision(ship.x, ship.y, ship.width, Bullet.allBullets))
+        if (Program.CheckCollision(ship.x, ship.y, ship.width))
             ship.health--;
     }
     public void KeyPresses()

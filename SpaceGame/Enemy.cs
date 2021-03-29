@@ -82,7 +82,7 @@ class EnemyShip
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
-        if (Program.CheckCollision(enemy.x, enemy.y, enemy.width, Bullet.allBullets))
+        if (Program.CheckCollision(enemy.x, enemy.y, enemy.width))
             enemy.health--;
     }
     static void EnemyDead(EnemyShip enemy)

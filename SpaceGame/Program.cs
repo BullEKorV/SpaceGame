@@ -41,9 +41,11 @@ class Program
             RenderWorld(Textures);
 
             Raylib.EndDrawing();
+            Console.WriteLine(Raylib.GetFPS());
+
         }
     }
-    public static bool CheckCollision(float xPos, float yPos, int size, List<Bullet> bullets)
+    public static bool CheckCollision(float xPos, float yPos, int size)
     {
         // double radians = (Math.PI / 180) * testShip.rotation;
 
@@ -64,18 +66,18 @@ class Program
         // Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
         // Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
 
-        for (int i = 0; i < bullets.Count; i++)
+        for (int i = 0; i < Bullet.allBullets.Count; i++)
         {
             float distanceBetweenCirclesSquared =
-            (bullets[i].x - xPos) * (bullets[i].x - xPos) +
-            (bullets[i].y - yPos) * (bullets[i].y - yPos);
+            (Bullet.allBullets[i].x - xPos) * (Bullet.allBullets[i].x - xPos) +
+            (Bullet.allBullets[i].y - yPos) * (Bullet.allBullets[i].y - yPos);
 
             // Raylib.DrawCircle((int)(bullet.x - testShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + testShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
             // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, testShip.width / 2, Color.RED);
 
             if (distanceBetweenCirclesSquared < (size / 2 + 10) * (size / 2 + 10))
             {
-                bullets.Remove(bullets[i]);
+                Bullet.allBullets.Remove(Bullet.allBullets[i]);
                 return true;
             }
         }
@@ -117,6 +119,9 @@ class Program
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
 
         Raylib.DrawRectangle((int)(-PlayerShip.ship.x - 50f), (int)(PlayerShip.ship.y - 50f), 100, 100, Color.GREEN);
+
+        // Draw stars
+        Star.DrawStars();
 
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], 0, 0, PlayerShip.ship.rotation);
