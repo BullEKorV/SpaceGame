@@ -12,6 +12,7 @@ class PlayerShip
     public float rotation;
     public int health;
     public int maxHealth;
+    private float shootSpeed = 20;
     public int timeSinceShot;
     private bool left, right, up, down;
     private float speed = 0.22f;
@@ -31,7 +32,7 @@ class PlayerShip
         ship.rotation = Program.LookAt(ship.x + Raylib.GetScreenWidth() / 2, ship.y - Raylib.GetScreenHeight() / 2, ship.x + Raylib.GetMouseX(), ship.y - Raylib.GetMouseY());
 
         // Spawn bullet
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceShot > 20)
+        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceShot > shootSpeed)
         {
             Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2);
             ship.timeSinceShot = 0;

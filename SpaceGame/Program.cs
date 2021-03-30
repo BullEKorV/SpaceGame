@@ -41,8 +41,6 @@ class Program
             RenderWorld(Textures);
 
             Raylib.EndDrawing();
-            Console.WriteLine(Raylib.GetFPS());
-
         }
     }
     public static bool CheckCollision(float xPos, float yPos, int size)
@@ -122,6 +120,9 @@ class Program
 
         // Draw stars
         Star.DrawStars();
+
+        // Display FPS
+        Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 30, Color.WHITE);
 
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], 0, 0, PlayerShip.ship.rotation);
