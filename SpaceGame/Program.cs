@@ -43,43 +43,22 @@ class Program
             Raylib.EndDrawing();
         }
     }
-    public static bool CheckCollision(float xPos, float yPos, int size)
+    public static int CheckBulletCollision(float xPos, float yPos, int size)
     {
-        // double radians = (Math.PI / 180) * testShip.rotation;
-
-        // float p1X = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
-        // float p1Y = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
-
-        // float p2X = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
-        // float p2Y = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
-
-        // float p3X = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
-        // float p3Y = (float)((testShip.x - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
-
-        // float p4X = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Cos(radians) - (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Sin(radians));
-        // float p4Y = (float)((testShip.x + testShip.width - (testShip.x + testShip.width / 2)) * Math.Sin(radians) + (testShip.y + testShip.height - (testShip.y + testShip.height / 2)) * Math.Cos(radians));
-
-        // Raylib.DrawRectangle((int)p1X + Raylib.GetScreenWidth() / 2, (int)p1Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.RED);
-        // Raylib.DrawRectangle((int)p2X + Raylib.GetScreenWidth() / 2, (int)p2Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.DARKGRAY);
-        // Raylib.DrawRectangle((int)p3X + Raylib.GetScreenWidth() / 2, (int)p3Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.ORANGE);
-        // Raylib.DrawRectangle((int)p4X + Raylib.GetScreenWidth() / 2, (int)p4Y + Raylib.GetScreenHeight() / 2, 10, 10, Color.BLUE);
-
         for (int i = 0; i < Bullet.allBullets.Count; i++)
         {
             float distanceBetweenCirclesSquared =
             (Bullet.allBullets[i].x - xPos) * (Bullet.allBullets[i].x - xPos) +
             (Bullet.allBullets[i].y - yPos) * (Bullet.allBullets[i].y - yPos);
 
-            // Raylib.DrawCircle((int)(bullet.x - testShip.x + Raylib.GetScreenWidth() / 2), (int)(-bullet.y + testShip.y + Raylib.GetScreenHeight() / 2), 10, Color.BROWN);
-            // Raylib.DrawCircle((int)Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, testShip.width / 2, Color.RED);
-
             if (distanceBetweenCirclesSquared < (size / 2 + 10) * (size / 2 + 10))
             {
+                int damageDealt = Bullet.allBullets[i].damage;
                 Bullet.allBullets.Remove(Bullet.allBullets[i]);
-                return true;
+                return damageDealt;
             }
         }
-        return false;
+        return 0;
     }
     static public float LookAt(float x1, float y1, float x2, float y2)
     {
@@ -123,6 +102,10 @@ class Program
 
         // Display FPS
         Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 30, Color.WHITE);
+
+        // Player display stats
+        Raylib.DrawText(PlayerShip.ship.health.ToString() + ":" + PlayerShip.ship.maxHealth.ToString(), Raylib.GetScreenWidth() / 2, 10, 30, Color.WHITE);
+
 
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], 0, 0, PlayerShip.ship.rotation);

@@ -4,20 +4,25 @@ using Raylib_cs;
 class Bullet
 {
     public static List<Bullet> allBullets = new List<Bullet>();
-    public float x;
-    public float y;
+
+    // Position variables
+    public float x, y;
+
+    // Rotation variable
     public float rotation;
-    public float velocity;
-    public float xVelocity;
-    public float yVelocity;
-    public string type;
-    public Bullet(float x, float y, float rotation, float velocity, string type)
+
+    // Velocity variables
+    private float speed, xVelocity, yVelocity;
+
+    // Damage
+    public int damage;
+    public Bullet(float x, float y, float rotation, float speed, int damage)
     {
         this.rotation = rotation;
         this.x = x;
         this.y = y;
-        this.velocity = velocity;
-        this.type = type;
+        this.speed = speed;
+        this.damage = damage;
 
         allBullets.Add(this);
     }
@@ -35,17 +40,17 @@ class Bullet
             }
         }
     }
-    public static void SpawnBullet(float x, float y, float rotation, int shipHeight)
+    public static void SpawnBullet(float x, float y, float rotation, int shipHeight, float speed, int damage)
     {
         var pos = Program.CalculatePositionVelocity(x, y, shipHeight, rotation);
         float xPos = pos.x;
         float yPos = pos.y;
 
         // allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
-        new Bullet(xPos, yPos, rotation, 20, "player");
+        new Bullet(xPos, yPos, rotation, speed, damage);
 
         // Calculate x and y velocity
-        var newVelocity = Program.CalculatePositionVelocity(0, 0, allBullets[allBullets.Count - 1].velocity, rotation);
+        var newVelocity = Program.CalculatePositionVelocity(0, 0, allBullets[allBullets.Count - 1].speed, rotation);
         float xVelocity = newVelocity.x;
         float yVelocity = newVelocity.y;
 

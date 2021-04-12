@@ -3,19 +3,27 @@ using Raylib_cs;
 class PlayerShip
 {
     public static PlayerShip ship;
-    public float x;
-    public float y;
-    public int width;
-    public int height;
-    public float xVelocity;
-    public float yVelocity;
+
+    //Position variables
+    public float x, y;
+
+    // Size variables
+    public int width, height;
+
+    // Velocity variables
+    private float xVelocity, yVelocity, speed = 0.22f;
+
+    // Rotation
     public float rotation;
-    public int health;
-    public int maxHealth;
-    private float shootSpeed = 20;
-    public int timeSinceShot;
+
+    // Health variables
+    public int health, maxHealth;
+
+    // Shooting variables
+    private int timeSinceShot, shootSpeed = 15, damage = 15;
+
+    // Moving variables
     private bool left, right, up, down;
-    private float speed = 0.22f;
     public PlayerShip(float x, float y, float rotation, int maxHealth)
     {
         this.x = x;
@@ -34,7 +42,7 @@ class PlayerShip
         // Spawn bullet
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceShot > shootSpeed)
         {
-            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2);
+            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 20, ship.damage);
             ship.timeSinceShot = 0;
         }
         ship.timeSinceShot++;
@@ -54,8 +62,7 @@ class PlayerShip
         ship.yVelocity *= 0.96f;
 
         // Check collision
-        if (Program.CheckCollision(ship.x, ship.y, ship.width))
-            ship.health--;
+        ship.health -= Program.CheckBulletCollision(ship.x, ship.y, ship.width);
     }
     public void KeyPresses()
     {
