@@ -103,7 +103,7 @@ class Program
         // Display FPS
         Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 30, Color.WHITE);
 
-        // Player display stats
+        // Display player stats
         Raylib.DrawText(PlayerShip.ship.health.ToString() + ":" + PlayerShip.ship.maxHealth.ToString(), Raylib.GetScreenWidth() / 2, 10, 30, Color.WHITE);
 
 
