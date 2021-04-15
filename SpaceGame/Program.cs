@@ -100,13 +100,6 @@ class Program
         // Draw stars
         Star.DrawStars();
 
-        // Display FPS
-        Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 30, Color.WHITE);
-
-        // Display player stats
-        Raylib.DrawText(PlayerShip.ship.health.ToString() + ":" + PlayerShip.ship.maxHealth.ToString(), Raylib.GetScreenWidth() / 2, 10, 30, Color.WHITE);
-
-
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], 0, 0, PlayerShip.ship.rotation);
 
@@ -130,6 +123,11 @@ class Program
             DrawHealthBar(enemy.x - (int)PlayerShip.ship.x, -enemy.y + (int)PlayerShip.ship.y, enemy.width, enemy.height, enemy.health, enemy.maxHealth);
         }
 
+        // Display FPS
+        Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 30, Color.WHITE);
+
+        // Display player stats
+        Raylib.DrawText(PlayerShip.ship.health.ToString() + ":" + PlayerShip.ship.maxHealth.ToString(), Raylib.GetScreenWidth() / 2, 10, 30, Color.WHITE);
     }
     static void DrawHealthBar(float x, float y, int width, int height, int health, int maxHealth)
     {

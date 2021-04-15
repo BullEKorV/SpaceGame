@@ -36,7 +36,10 @@ class EnemyShip
     }
     public static void EnemyLogic(Dictionary<String, Texture2D> Textures)
     {
-        if (allEnemies.Count < 1)
+        var rnd = new Random();
+
+        // Spawn new enemy
+        if (rnd.Next(1, 200) == 1)
             SpawnEnemy(Textures["PlayerShip"]);
 
         for (int i = 0; i < allEnemies.Count; i++)
@@ -94,8 +97,35 @@ class EnemyShip
     }
     static void SpawnEnemy(Texture2D enemyTexture)
     {
-        float enemyX = -200;
-        float enemyY = -200;
+        // Only spawns in the corners smh
+        var rnd = new Random();
+
+        int side = rnd.Next(1, 5); // 1 up, 2 down, 3 left, 4 right
+        float enemyX = 0;
+        float enemyY = 0;
+
+        switch (side)
+        {
+            case 1:
+                enemyY = PlayerShip.ship.y + Raylib.GetScreenHeight() / 2 + 200;
+                enemyX = PlayerShip.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
+                break;
+            case 2:
+                enemyY = PlayerShip.ship.y - Raylib.GetScreenHeight() / 2 - 200;
+                enemyX = PlayerShip.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
+                break;
+            case 3:
+                enemyX = PlayerShip.ship.x - Raylib.GetScreenWidth() / 2 - 200;
+                enemyY = PlayerShip.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
+                break;
+            case 4:
+                enemyX = PlayerShip.ship.x + Raylib.GetScreenWidth() / 2 + 200;
+                enemyY = PlayerShip.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
+                break;
+            default:
+                break;
+        }
+
         float enemyRotation = 0;
         int enemyHealth = 100;
 
