@@ -23,7 +23,7 @@ class EnemyShip
     public int health, maxHealth;
 
     // Shooting variables
-    private int timeSinceShot, shootSpeed = 30, damage = 10;
+    private int timeSinceShot, shootSpeed = 30, damage = 5;
     public EnemyShip(float x, float y, float rotation, int maxHealth)
     {
         this.x = x;
@@ -39,7 +39,7 @@ class EnemyShip
         var rnd = new Random();
 
         // Spawn new enemy
-        if (rnd.Next(1, 200) == 1)
+        if (rnd.Next(1, 150) == 1)
             SpawnEnemy(Textures["PlayerShip"]);
 
         for (int i = 0; i < allEnemies.Count; i++)

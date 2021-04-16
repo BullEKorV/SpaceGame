@@ -128,6 +128,13 @@ class Program
 
         // Display player stats
         Raylib.DrawText(PlayerShip.ship.health.ToString() + ":" + PlayerShip.ship.maxHealth.ToString(), Raylib.GetScreenWidth() / 2, 10, 30, Color.WHITE);
+
+        // Display enemy amounts
+        Raylib.DrawText(EnemyShip.allEnemies.Count.ToString(), Raylib.GetScreenWidth() - 100, 10, 30, Color.WHITE);
+
+        // Display bullet amounts
+        Raylib.DrawText(Bullet.allBullets.Count.ToString(), Raylib.GetScreenWidth() - 100, 35, 30, Color.WHITE);
+
     }
     static void DrawHealthBar(float x, float y, int width, int height, int health, int maxHealth)
     {
