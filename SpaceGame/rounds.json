@@ -1,0 +1,14 @@
+[
+    { 
+        "round": 1,
+        "enemies": 5,
+        "spawnrate": 2,
+        "test": "hey"
+    },
+    { 
+        "round": 2,
+        "enemies": 1,
+        "spawnrate": 1,
+        "test": "ney"
+    }
+]

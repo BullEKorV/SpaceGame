@@ -19,8 +19,14 @@ class Program
         PlayerShip.ship.height = Textures["PlayerShip"].height;
 
 
+        RoundHandler.GetCurrentRound(1);
         while (!Raylib.WindowShouldClose())
         {
+            // Round test
+            // Console.WriteLine(RoundHandler.currentRound.enemies);
+            if (RoundHandler.currentRound.enemies == 0 && RoundHandler.currentRound.round == 1)
+                RoundHandler.GetCurrentRound(2);
+
             // Draw logic
             Star.StarLogic();
 

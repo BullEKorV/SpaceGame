@@ -38,9 +38,17 @@ class EnemyShip
     {
         var rnd = new Random();
 
+        Console.WriteLine(RoundHandler.currentRound.timeTillNextSpawn + "  " + Raylib.GetTime());
         // Spawn new enemy
-        if (rnd.Next(1, 150) == 1)
-            SpawnEnemy(Textures["PlayerShip"]);
+        if (RoundHandler.currentRound.enemies > 0)
+        {
+            if (Raylib.GetTime() > RoundHandler.currentRound.timeTillNextSpawn)
+            {
+                SpawnEnemy(Textures["PlayerShip"]);
+                RoundHandler.currentRound.enemies--;
+                RoundHandler.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundHandler.currentRound.spawnRate;
+            }
+        }
 
         for (int i = 0; i < allEnemies.Count; i++)
         {
