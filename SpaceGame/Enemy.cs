@@ -7,6 +7,9 @@ class EnemyShip
 {
     public static List<EnemyShip> allEnemies = new List<EnemyShip>();
 
+    // What type of enemy
+    public EnemyType type;
+
     //Position variables
     public float x, y;
 
@@ -14,7 +17,7 @@ class EnemyShip
     public int width, height;
 
     // Velocity variables
-    private float velocity, speed = 0.22f;
+    private float velocity, speed;
 
     // Rotation
     public float rotation;
@@ -23,14 +26,17 @@ class EnemyShip
     public int health, maxHealth;
 
     // Shooting variables
-    private int timeSinceShot, shootSpeed = 30, damage = 5;
-    public EnemyShip(float x, float y, float rotation, int maxHealth)
+    private int timeSinceShot, fireRate, damage;
+    public EnemyShip(float x, float y, int maxHealth, float speed, int damage, int fireRate, EnemyType type)
     {
         this.x = x;
         this.y = y;
-        this.rotation = rotation;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.speed = speed;
+        this.damage = damage;
+        this.fireRate = fireRate;
+        this.type = type;
 
         allEnemies.Add(this);
     }
@@ -38,15 +44,22 @@ class EnemyShip
     {
         var rnd = new Random();
 
-        Console.WriteLine(RoundHandler.currentRound.timeTillNextSpawn + "  " + Raylib.GetTime());
         // Spawn new enemy
-        if (RoundHandler.currentRound.enemies > 0)
+        if (Raylib.GetTime() > RoundManager.currentRound.timeTillNextSpawn)
         {
-            if (Raylib.GetTime() > RoundHandler.currentRound.timeTillNextSpawn)
+            // Very bad spawning needs improvement
+            if (RoundManager.currentRound.enemiesEasy > 0)
             {
-                SpawnEnemy(Textures["PlayerShip"]);
-                RoundHandler.currentRound.enemies--;
-                RoundHandler.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundHandler.currentRound.spawnRate;
+                Console.WriteLine(RoundManager.currentRound.enemiesEasy);
+                SpawnEnemy(Textures["EnemyShipEasy"], EnemyType.Easy);
+                RoundManager.currentRound.enemiesEasy--;
+                RoundManager.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundManager.currentRound.spawnRate;
+            }
+            if (RoundManager.currentRound.enemiesHard > 0)
+            {
+                SpawnEnemy(Textures["EnemyShipHard"], EnemyType.Hard);
+                RoundManager.currentRound.enemiesHard--;
+                RoundManager.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundManager.currentRound.spawnRate;
             }
         }
 
@@ -65,24 +78,34 @@ class EnemyShip
         if (distanceToPlayer > 550)
         {
             enemy.velocity += enemy.speed;
-            if (enemy.velocity > 3)
-                enemy.velocity = 3;
+            // if (enemy.velocity > 3)
+            //     enemy.velocity = 3;
         }
         else if (distanceToPlayer < 350)
         {
             enemy.velocity -= enemy.speed * 2;
-            if (enemy.velocity < -6)
-                enemy.velocity = -6;
+            // if (enemy.velocity < -6)
+            //     enemy.velocity = -6;
         }
         else
         {
             enemy.timeSinceShot++;
-            if (enemy.timeSinceShot > enemy.shootSpeed)
+            if (enemy.timeSinceShot > enemy.fireRate)
             {
-                Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2, 20, enemy.damage);
+                if (enemy.type == EnemyType.Easy)
+                    Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
+                else if (enemy.type == EnemyType.Hard)
+                {
+                    // Shoot 2 bullets
+                    var leftCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation - 90);
+                    var rightCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation + 90);
+
+                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
+                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
+
+                }
                 enemy.timeSinceShot = 0;
             }
-            enemy.velocity *= 0.98f;
         }
 
         // Check if dead
@@ -96,6 +119,8 @@ class EnemyShip
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
+        enemy.velocity *= 0.97f;
+
         // Check if collision with bullet
         enemy.health -= Program.CheckBulletCollision(enemy.x, enemy.y, enemy.width);
     }
@@ -103,9 +128,8 @@ class EnemyShip
     {
         allEnemies.Remove(enemy);
     }
-    static void SpawnEnemy(Texture2D enemyTexture)
+    static void SpawnEnemy(Texture2D enemyTexture, EnemyType type)
     {
-        // Only spawns in the corners smh
         var rnd = new Random();
 
         int side = rnd.Next(1, 5); // 1 up, 2 down, 3 left, 4 right
@@ -134,12 +158,36 @@ class EnemyShip
                 break;
         }
 
-        float enemyRotation = 0;
-        int enemyHealth = 100;
+        int maxHealth = 0;
+        float speed = 0;
+        int damage = 0;
+        int fireRate = 0;
 
-        new EnemyShip(enemyX, enemyY, enemyRotation, enemyHealth);
+        // Give special enemies special stats 
+        if (type == EnemyType.Easy) // Find better system
+        {
+            maxHealth = 100;
+            speed = 0.2f;
+            damage = 5;
+            fireRate = 30;
+        }
+        if (type == EnemyType.Hard)
+        {
+            maxHealth = 150;
+            speed = 0.1f;
+            damage = 3;
+            fireRate = 20;
+        }
+
+        new EnemyShip(enemyX, enemyY, maxHealth, speed, damage, fireRate, type);
 
         allEnemies[allEnemies.Count - 1].width = enemyTexture.width;
         allEnemies[allEnemies.Count - 1].height = enemyTexture.height;
+
     }
+}
+enum EnemyType
+{
+    Easy,
+    Hard
 }

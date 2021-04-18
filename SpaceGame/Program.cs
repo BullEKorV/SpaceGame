@@ -19,13 +19,13 @@ class Program
         PlayerShip.ship.height = Textures["PlayerShip"].height;
 
 
-        RoundHandler.GetCurrentRound(1);
+        RoundManager.GetCurrentRound(1);
         while (!Raylib.WindowShouldClose())
         {
             // Round test
-            // Console.WriteLine(RoundHandler.currentRound.enemies);
-            if (RoundHandler.currentRound.enemies == 0 && RoundHandler.currentRound.round == 1)
-                RoundHandler.GetCurrentRound(2);
+            // Console.WriteLine(RoundManager.currentRound.enemies);
+            // if (RoundManager.currentRound.enemiesEasy + RoundManager.currentRound.enemiesHard == 0)
+            //     RoundManager.GetCurrentRound(2);
 
             // Draw logic
             Star.StarLogic();
@@ -82,6 +82,12 @@ class Program
 
     static public (float x, float y) CalculatePositionVelocity(float x, float y, float velocity, float rotation)
     {
+        if (rotation < 0)
+            rotation = 360 - Math.Abs(rotation);
+
+        if (rotation > 360)
+            rotation -= 360;
+
         double radians = (Math.PI / 180) * rotation;
 
         x = (float)(x + velocity * Math.Sin(radians));
@@ -111,7 +117,10 @@ class Program
 
         foreach (var enemy in EnemyShip.allEnemies)
         {
-            DrawObjectRotation(Textures["PlayerShip"], (int)enemy.x - (int)PlayerShip.ship.x, -(int)enemy.y + (int)PlayerShip.ship.y, enemy.rotation);
+            if (enemy.type == EnemyType.Easy)
+                DrawObjectRotation(Textures["EnemyShipEasy"], (int)enemy.x - (int)PlayerShip.ship.x, -(int)enemy.y + (int)PlayerShip.ship.y, enemy.rotation);
+            else if (enemy.type == EnemyType.Hard)
+                DrawObjectRotation(Textures["EnemyShipHard"], (int)enemy.x - (int)PlayerShip.ship.x, -(int)enemy.y + (int)PlayerShip.ship.y, enemy.rotation);
         }
 
         // Draw bullets
@@ -169,8 +178,9 @@ class Program
     {
         Dictionary<String, Texture2D> Textures = new Dictionary<string, Texture2D>();
         Textures.Add("PlayerShip", Raylib.LoadTexture("Textures/PlayerShip.png")); // Player ship
+        Textures.Add("EnemyShipEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
+        Textures.Add("EnemyShipHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
-        Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 
         return Textures;
     }

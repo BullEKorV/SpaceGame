@@ -1,13 +1,15 @@
 [
-    { 
+    {
         "round": 1,
-        "enemies": 5,
+        "enemiesEasy": 5,
+        "enemiesHard": 2,
         "spawnrate": 2,
         "test": "hey"
     },
-    { 
+    {
         "round": 2,
-        "enemies": 1,
+        "enemiesEasy": 1,
+        "enemiesHard": 1,
         "spawnrate": 1,
         "test": "ney"
     }
