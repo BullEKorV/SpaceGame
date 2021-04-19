@@ -100,7 +100,7 @@ class EnemyShip
         enemy.y = newPos.y;
 
 <<<<<<< HEAD
-        enemy.velocity *= 0.971f;
+        enemy.velocity *= 0.97f;
 =======
         enemy.velocity *= 0.97f;
 >>>>>>> f3ace98ffd07d53ec9412370d22e400b80734a3e
