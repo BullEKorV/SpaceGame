@@ -18,14 +18,12 @@ class Program
         PlayerShip.ship.width = Textures["PlayerShip"].width;
         PlayerShip.ship.height = Textures["PlayerShip"].height;
 
-
         RoundManager.GetCurrentRound(1);
+
         while (!Raylib.WindowShouldClose())
         {
             // Round test
-            // Console.WriteLine(RoundManager.currentRound.enemies);
-            // if (RoundManager.currentRound.enemiesEasy + RoundManager.currentRound.enemiesHard == 0)
-            //     RoundManager.GetCurrentRound(2);
+            // RoundManager.NewRound();
 
             // Draw logic
             Star.StarLogic();
@@ -137,6 +135,9 @@ class Program
         {
             DrawHealthBar(enemy.x - (int)PlayerShip.ship.x, -enemy.y + (int)PlayerShip.ship.y, enemy.width, enemy.height, enemy.health, enemy.maxHealth);
         }
+
+        // Display round
+        Raylib.DrawText(RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 35, 30, Color.WHITE);
 
         // Display FPS
         Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 30, Color.WHITE);

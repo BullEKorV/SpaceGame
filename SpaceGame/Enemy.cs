@@ -45,22 +45,28 @@ class EnemyShip
         var rnd = new Random();
 
         // Spawn new enemy
-        if (Raylib.GetTime() > RoundManager.currentRound.timeTillNextSpawn)
+        if (RoundManager.EnemiesLeft() > 0 && Raylib.GetTime() > RoundManager.currentRound.timeTillNextSpawn)
         {
-            // Very bad spawning needs improvement
-            if (RoundManager.currentRound.enemiesEasy > 0)
+            bool enemySpawned = false;
+
+            while (!enemySpawned)
             {
-                Console.WriteLine(RoundManager.currentRound.enemiesEasy);
-                SpawnEnemy(Textures["EnemyShipEasy"], EnemyType.Easy);
-                RoundManager.currentRound.enemiesEasy--;
-                RoundManager.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundManager.currentRound.spawnRate;
+                int enemyToSpawn = rnd.Next(0, 2);
+
+                if (enemyToSpawn == 0 && RoundManager.currentRound.enemies.easy > 0)
+                {
+                    enemySpawned = true;
+                    SpawnEnemy(Textures["EnemyShipEasy"], EnemyType.Easy);
+                    RoundManager.currentRound.enemies.easy--;
+                }
+                if (enemyToSpawn == 1 && RoundManager.currentRound.enemies.hard > 0)
+                {
+                    enemySpawned = true;
+                    SpawnEnemy(Textures["EnemyShipHard"], EnemyType.Hard);
+                    RoundManager.currentRound.enemies.hard--;
+                }
             }
-            if (RoundManager.currentRound.enemiesHard > 0)
-            {
-                SpawnEnemy(Textures["EnemyShipHard"], EnemyType.Hard);
-                RoundManager.currentRound.enemiesHard--;
-                RoundManager.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundManager.currentRound.spawnRate;
-            }
+            RoundManager.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundManager.currentRound.spawnRate;
         }
 
         for (int i = 0; i < allEnemies.Count; i++)
@@ -102,7 +108,6 @@ class EnemyShip
 
                     Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
                     Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
-
                 }
                 enemy.timeSinceShot = 0;
             }
@@ -127,6 +132,9 @@ class EnemyShip
     static void EnemyDead(EnemyShip enemy)
     {
         allEnemies.Remove(enemy);
+
+        // Check if should update to new round
+        RoundManager.NewRound();
     }
     static void SpawnEnemy(Texture2D enemyTexture, EnemyType type)
     {

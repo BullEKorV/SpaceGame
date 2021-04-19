@@ -1,16 +1,18 @@
 [
     {
         "round": 1,
-        "enemiesEasy": 5,
-        "enemiesHard": 2,
-        "spawnrate": 2,
-        "test": "hey"
+        "enemies": {
+            "easy": 3,
+            "hard": 0
+        },
+        "spawnrate": 2
     },
     {
         "round": 2,
-        "enemiesEasy": 1,
-        "enemiesHard": 1,
-        "spawnrate": 1,
-        "test": "ney"
+        "enemies": {
+            "easy": 5,
+            "hard": 1
+        },
+        "spawnrate": 0.1
     }
 ]
