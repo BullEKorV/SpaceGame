@@ -99,11 +99,7 @@ class EnemyShip
         enemy.x = newPos.x;
         enemy.y = newPos.y;
 
-<<<<<<< HEAD
         enemy.velocity *= 0.97f;
-=======
-        enemy.velocity *= 0.97f;
->>>>>>> f3ace98ffd07d53ec9412370d22e400b80734a3e
 
         // Shooting logic
         enemy.timeSinceShot++;
@@ -119,13 +115,8 @@ class EnemyShip
                     var leftCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation - 90);
                     var rightCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation + 90);
 
-<<<<<<< HEAD
                     Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage);
                     Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage);
-=======
-                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage);
-                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage);
->>>>>>> f3ace98ffd07d53ec9412370d22e400b80734a3e
                 }
                 enemy.timeSinceShot = 0;
             }
@@ -137,10 +128,6 @@ class EnemyShip
             EnemyDead(enemy);
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f3ace98ffd07d53ec9412370d22e400b80734a3e
         // Check if collision with bullet
         enemy.health -= Program.CheckBulletCollision(enemy.x, enemy.y, enemy.width);
     }
