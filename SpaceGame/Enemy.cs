@@ -93,21 +93,30 @@ class EnemyShip
             // if (enemy.velocity < -6)
             //     enemy.velocity = -6;
         }
-        else
+
+        // Calculate new position
+        var newPos = Program.CalculatePositionVelocity(enemy.x, enemy.y, enemy.velocity, enemy.rotation);
+        enemy.x = newPos.x;
+        enemy.y = newPos.y;
+
+        enemy.velocity *= 0.97f;
+
+        // Shooting logic
+        enemy.timeSinceShot++;
+        if (distanceToPlayer < 650)
         {
-            enemy.timeSinceShot++;
             if (enemy.timeSinceShot > enemy.fireRate)
             {
                 if (enemy.type == EnemyType.Easy)
-                    Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
+                    Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage);
                 else if (enemy.type == EnemyType.Hard)
                 {
                     // Shoot 2 bullets
                     var leftCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation - 90);
                     var rightCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation + 90);
 
-                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
-                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 20, enemy.damage);
+                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage);
+                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage);
                 }
                 enemy.timeSinceShot = 0;
             }
@@ -118,13 +127,6 @@ class EnemyShip
         {
             EnemyDead(enemy);
         }
-
-        // Calculate new position
-        var newPos = Program.CalculatePositionVelocity(enemy.x, enemy.y, enemy.velocity, enemy.rotation);
-        enemy.x = newPos.x;
-        enemy.y = newPos.y;
-
-        enemy.velocity *= 0.97f;
 
         // Check if collision with bullet
         enemy.health -= Program.CheckBulletCollision(enemy.x, enemy.y, enemy.width);
