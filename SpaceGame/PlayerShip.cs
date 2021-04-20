@@ -20,7 +20,7 @@ class Player
     public int health, maxHealth;
 
     // Shooting variables
-    private int timeSinceShot, shootSpeed = 15, damage = 15;
+    private int timeSinceLaser, timeSinceExplosive, shootSpeed = 15, damage = 15;
 
     // Moving variables
     private bool left, right, up, down;
@@ -40,17 +40,18 @@ class Player
         ship.rotation = Program.LookAt(ship.x + Raylib.GetScreenWidth() / 2, ship.y - Raylib.GetScreenHeight() / 2, ship.x + Raylib.GetMouseX(), ship.y - Raylib.GetMouseY());
 
         // Spawn bullet
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceShot > shootSpeed)
+        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceLaser > shootSpeed)
         {
             Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
-            ship.timeSinceShot = 0;
+            ship.timeSinceLaser = 0;
         }
-        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && ship.timeSinceShot > shootSpeed)
+        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && ship.timeSinceExplosive > shootSpeed * 10)
         {
-            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 7, ship.damage * 2, true, true);
-            ship.timeSinceShot = 0;
+            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 7, ship.damage * 5, true, true);
+            ship.timeSinceExplosive = 0;
         }
-        ship.timeSinceShot++;
+        ship.timeSinceLaser++;
+        ship.timeSinceExplosive++;
 
         // Check keypresses
         KeyPresses();

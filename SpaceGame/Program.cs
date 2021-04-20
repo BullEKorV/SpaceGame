@@ -68,7 +68,7 @@ class Program
                             (Bullet.allBullets[i].x - Enemy.allEnemies[y].x) * (Bullet.allBullets[i].x - Enemy.allEnemies[y].x) +
                             (Bullet.allBullets[i].y - Enemy.allEnemies[y].y) * (Bullet.allBullets[i].y - Enemy.allEnemies[y].y);
 
-                            int explosionSize = 150;
+                            int explosionSize = 350;
                             if (distanceBetweenCirclesSquared < (size / 2 + explosionSize) * (size / 2 + explosionSize))
                             {
                                 // Calculate explosion range damage dropoff
