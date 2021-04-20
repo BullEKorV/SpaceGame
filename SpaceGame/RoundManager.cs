@@ -18,7 +18,7 @@ class RoundManager
     }
     public static void NewRound()
     {
-        if (EnemiesLeft() == 0 && EnemyShip.allEnemies.Count == 0)
+        if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0)
         {
             if (currentRound.round < GetLevelsJson().Count)
                 GetCurrentRound(currentRound.round + 1);

@@ -3,16 +3,16 @@
         "round": 1,
         "enemies": {
             "easy": 3,
-            "hard": 0
+            "hard": 2
         },
-        "spawnrate": 2
+        "spawnrate": 0.01
     },
     {
         "round": 2,
         "enemies": {
-            "easy": 5,
-            "hard": 1
+            "easy": 50,
+            "hard": 10
         },
-        "spawnrate": 0.1
+        "spawnrate": 0.01
     }
 ]

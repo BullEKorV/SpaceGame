@@ -1,8 +1,8 @@
 using System;
 using Raylib_cs;
-class PlayerShip
+class Player
 {
-    public static PlayerShip ship;
+    public static Player ship;
 
     //Position variables
     public float x, y;
@@ -24,7 +24,7 @@ class PlayerShip
 
     // Moving variables
     private bool left, right, up, down;
-    public PlayerShip(float x, float y, float rotation, int maxHealth)
+    public Player(float x, float y, float rotation, int maxHealth)
     {
         this.x = x;
         this.y = y;
@@ -42,7 +42,12 @@ class PlayerShip
         // Spawn bullet
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceShot > shootSpeed)
         {
-            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 20, ship.damage);
+            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
+            ship.timeSinceShot = 0;
+        }
+        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && ship.timeSinceShot > shootSpeed)
+        {
+            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 7, ship.damage * 2, true, true);
             ship.timeSinceShot = 0;
         }
         ship.timeSinceShot++;
@@ -62,7 +67,7 @@ class PlayerShip
         ship.yVelocity *= 0.96f;
 
         // Check collision
-        ship.health -= Program.CheckBulletCollision(ship.x, ship.y, ship.width);
+        ship.health -= Program.CheckBulletCollision(ship.x, ship.y, ship.width, true);
     }
     public void KeyPresses()
     {

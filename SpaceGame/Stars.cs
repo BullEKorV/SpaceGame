@@ -20,10 +20,10 @@ class Star
     public static void StarLogic()
     {
         // TO DO... Only play when entering new chunk
-        if (chunkX != (int)PlayerShip.ship.x / Raylib.GetScreenWidth() || chunkY != (int)PlayerShip.ship.y / Raylib.GetScreenHeight())
+        if (chunkX != (int)Player.ship.x / Raylib.GetScreenWidth() || chunkY != (int)Player.ship.y / Raylib.GetScreenHeight())
         {
-            chunkX = (int)PlayerShip.ship.x / Raylib.GetScreenWidth();
-            chunkY = (int)PlayerShip.ship.y / Raylib.GetScreenHeight();
+            chunkX = (int)Player.ship.x / Raylib.GetScreenWidth();
+            chunkY = (int)Player.ship.y / Raylib.GetScreenHeight();
             SpawnStars();
         }
     }
@@ -77,7 +77,7 @@ class Star
                     // {
                     foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
                     {
-                        Raylib.DrawRectangle((int)star.x - (int)PlayerShip.ship.x, (int)star.y + (int)PlayerShip.ship.y, star.size, star.size, Color.YELLOW);
+                        Raylib.DrawRectangle((int)star.x - (int)Player.ship.x, (int)star.y + (int)Player.ship.y, star.size, star.size, Color.YELLOW);
                     }
                     // }
                 }

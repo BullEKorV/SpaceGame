@@ -3,9 +3,9 @@ using System.Numerics;
 using System.Collections.Generic;
 using Raylib_cs;
 
-class EnemyShip
+class Enemy
 {
-    public static List<EnemyShip> allEnemies = new List<EnemyShip>();
+    public static List<Enemy> allEnemies = new List<Enemy>();
 
     // What type of enemy
     public EnemyType type;
@@ -27,7 +27,7 @@ class EnemyShip
 
     // Shooting variables
     private int timeSinceShot, fireRate, damage;
-    public EnemyShip(float x, float y, int maxHealth, float speed, int damage, int fireRate, EnemyType type)
+    public Enemy(float x, float y, int maxHealth, float speed, int damage, int fireRate, EnemyType type)
     {
         this.x = x;
         this.y = y;
@@ -74,11 +74,11 @@ class EnemyShip
             EnemyAI(allEnemies[i]);
         }
     }
-    static void EnemyAI(EnemyShip enemy)
+    static void EnemyAI(Enemy enemy)
     {
-        enemy.rotation = Program.LookAt(enemy.x, enemy.y, PlayerShip.ship.x, PlayerShip.ship.y);
+        enemy.rotation = Program.LookAt(enemy.x, enemy.y, Player.ship.x, Player.ship.y);
 
-        float distanceToPlayer = Math.Abs(enemy.y - PlayerShip.ship.y) + Math.Abs(enemy.x - PlayerShip.ship.x);
+        float distanceToPlayer = Math.Abs(enemy.y - Player.ship.y) + Math.Abs(enemy.x - Player.ship.x);
 
         // Move closer to the player
         if (distanceToPlayer > 550)
@@ -108,15 +108,15 @@ class EnemyShip
             if (enemy.timeSinceShot > enemy.fireRate)
             {
                 if (enemy.type == EnemyType.Easy)
-                    Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage);
+                    Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false);
                 else if (enemy.type == EnemyType.Hard)
                 {
                     // Shoot 2 bullets
                     var leftCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation - 90);
                     var rightCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation + 90);
 
-                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage);
-                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage);
+                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
+                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
                 }
                 enemy.timeSinceShot = 0;
             }
@@ -129,9 +129,9 @@ class EnemyShip
         }
 
         // Check if collision with bullet
-        enemy.health -= Program.CheckBulletCollision(enemy.x, enemy.y, enemy.width);
+        enemy.health -= Program.CheckBulletCollision(enemy.x, enemy.y, enemy.width, false);
     }
-    static void EnemyDead(EnemyShip enemy)
+    static void EnemyDead(Enemy enemy)
     {
         allEnemies.Remove(enemy);
 
@@ -149,20 +149,20 @@ class EnemyShip
         switch (side)
         {
             case 1:
-                enemyY = PlayerShip.ship.y + Raylib.GetScreenHeight() / 2 + 200;
-                enemyX = PlayerShip.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
+                enemyY = Player.ship.y + Raylib.GetScreenHeight() / 2 + 200;
+                enemyX = Player.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
                 break;
             case 2:
-                enemyY = PlayerShip.ship.y - Raylib.GetScreenHeight() / 2 - 200;
-                enemyX = PlayerShip.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
+                enemyY = Player.ship.y - Raylib.GetScreenHeight() / 2 - 200;
+                enemyX = Player.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
                 break;
             case 3:
-                enemyX = PlayerShip.ship.x - Raylib.GetScreenWidth() / 2 - 200;
-                enemyY = PlayerShip.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
+                enemyX = Player.ship.x - Raylib.GetScreenWidth() / 2 - 200;
+                enemyY = Player.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
                 break;
             case 4:
-                enemyX = PlayerShip.ship.x + Raylib.GetScreenWidth() / 2 + 200;
-                enemyY = PlayerShip.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
+                enemyX = Player.ship.x + Raylib.GetScreenWidth() / 2 + 200;
+                enemyY = Player.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
                 break;
             default:
                 break;
@@ -189,7 +189,7 @@ class EnemyShip
             fireRate = 20;
         }
 
-        new EnemyShip(enemyX, enemyY, maxHealth, speed, damage, fireRate, type);
+        new Enemy(enemyX, enemyY, maxHealth, speed, damage, fireRate, type);
 
         allEnemies[allEnemies.Count - 1].width = enemyTexture.width;
         allEnemies[allEnemies.Count - 1].height = enemyTexture.height;
