@@ -5,6 +5,7 @@ using Raylib_cs;
 
 class Program
 {
+    public static Dictionary<String, Texture2D> allTextures = LoadTextures(); // Game Textures
     static void Main(string[] args)
     {
         new Player(0, 0, 90, 100);
@@ -12,18 +13,16 @@ class Program
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
 
-        Dictionary<String, Texture2D> Textures = LoadTextures(); // Game Textures
-
         // Give width and height to Player
-        Player.ship.width = Textures["PlayerShip"].width;
-        Player.ship.height = Textures["PlayerShip"].height;
+        Player.ship.width = allTextures["PlayerShip"].width;
+        Player.ship.height = allTextures["PlayerShip"].height;
 
         RoundManager.GetCurrentRound(1);
 
         while (!Raylib.WindowShouldClose())
         {
-            // Round test
-            // RoundManager.NewRound();
+            // Event manager code
+            EventManager.ManagerCode();
 
             // Draw logic
             Star.StarLogic();
@@ -32,7 +31,7 @@ class Program
             Player.ship.PlayerControl();
 
             // Enemy AI
-            Enemy.EnemyLogic(Textures);
+            Enemy.EnemyLogic(allTextures);
 
             // Update bullets position
             Bullet.Move();
@@ -42,7 +41,7 @@ class Program
             Raylib.ClearBackground(Color.BLACK);
 
             // Render world
-            RenderWorld(Textures);
+            RenderWorld(allTextures);
 
             Raylib.EndDrawing();
         }
@@ -59,6 +58,9 @@ class Program
             {
                 if (Bullet.allBullets[i].isPlayer != isPlayer)
                 {
+                    // Bullet splatter
+                    EventManager.NewEffect((float)(Raylib.GetTime() + 1.5), Bullet.allBullets[i].x, Bullet.allBullets[i].y, 20, allTextures["BulletHit"]);
+
                     // For explosive bullets
                     if (Bullet.allBullets[i].isExplosive == true)
                     {
@@ -68,13 +70,13 @@ class Program
                             (Bullet.allBullets[i].x - Enemy.allEnemies[y].x) * (Bullet.allBullets[i].x - Enemy.allEnemies[y].x) +
                             (Bullet.allBullets[i].y - Enemy.allEnemies[y].y) * (Bullet.allBullets[i].y - Enemy.allEnemies[y].y);
 
-                            int explosionSize = 350;
+                            int explosionSize = 250;
                             if (distanceBetweenCirclesSquared < (size / 2 + explosionSize) * (size / 2 + explosionSize))
                             {
                                 // Calculate explosion range damage dropoff
                                 float damageMultiplier = distanceBetweenCirclesSquared / ((size / 2 + explosionSize) * (size / 2 + explosionSize));
 
-                                Enemy.allEnemies[y].health -= (int)(Bullet.allBullets[i].damage * (1 - damageMultiplier));
+                                Enemy.allEnemies[y].health -= (int)(Bullet.allBullets[i].damage * (1 - damageMultiplier * 1.1));
                             }
                         }
                     }
@@ -133,6 +135,9 @@ class Program
 
         // Draw stars
         Star.DrawStars();
+
+        // Draw effects
+        EventManager.DrawEffects();
 
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], 0, 0, Player.ship.rotation);
@@ -206,6 +211,9 @@ class Program
         Textures.Add("EnemyShipEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
         Textures.Add("EnemyShipHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
+
+        // Effects
+        Textures.Add("BulletHit", Raylib.LoadTexture("Textures/BulletHit.png")); // Bullet hit
 
         return Textures;
     }

@@ -47,7 +47,7 @@ class Player
         }
         else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && ship.timeSinceExplosive > shootSpeed * 10)
         {
-            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 7, ship.damage * 5, true, true);
+            Bullet.SpawnBullet(ship.x, ship.y, ship.rotation, ship.height / 2, 7, ship.damage * 8, true, true);
             ship.timeSinceExplosive = 0;
         }
         ship.timeSinceLaser++;
