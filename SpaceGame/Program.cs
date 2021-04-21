@@ -59,7 +59,7 @@ class Program
                 if (Bullet.allBullets[i].isPlayer != isPlayer)
                 {
                     // Bullet splatter
-                    EventManager.NewEffect((float)(Raylib.GetTime() + 1.5), Bullet.allBullets[i].x, Bullet.allBullets[i].y, 20, allTextures["BulletHit"]);
+                    EventManager.NewEffect((float)(Raylib.GetTime() + 0.5), Bullet.allBullets[i].x, Bullet.allBullets[i].y, 0.5f, allTextures["BulletHit"]);
 
                     // For explosive bullets
                     if (Bullet.allBullets[i].isExplosive == true)
@@ -136,24 +136,21 @@ class Program
         // Draw stars
         Star.DrawStars();
 
-        // Draw effects
-        EventManager.DrawEffects();
-
         // Draw player
-        DrawObjectRotation(Textures["PlayerShip"], 0, 0, Player.ship.rotation);
+        DrawObjectRotation(Textures["PlayerShip"], 0, 0, Player.ship.rotation, 1, 255);
 
         foreach (var enemy in Enemy.allEnemies)
         {
             if (enemy.type == EnemyType.Easy)
-                DrawObjectRotation(Textures["EnemyShipEasy"], (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y, enemy.rotation);
+                DrawObjectRotation(Textures["EnemyShipEasy"], (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y, enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Hard)
-                DrawObjectRotation(Textures["EnemyShipHard"], (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y, enemy.rotation);
+                DrawObjectRotation(Textures["EnemyShipHard"], (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y, enemy.rotation, 1, 255);
         }
 
         // Draw bullets
         foreach (var bullet in Bullet.allBullets)
         {
-            DrawObjectRotation(Textures["Laser"], (int)bullet.x - (int)Player.ship.x, -(int)bullet.y + (int)Player.ship.y, bullet.rotation);
+            DrawObjectRotation(Textures["Laser"], (int)bullet.x - (int)Player.ship.x, -(int)bullet.y + (int)Player.ship.y, bullet.rotation, 1, 255);
         }
 
         // Draw player health bar
@@ -180,6 +177,11 @@ class Program
         // Display bullet amounts
         Raylib.DrawText(Bullet.allBullets.Count.ToString(), Raylib.GetScreenWidth() - 100, 35, 30, Color.WHITE);
 
+        // Draw effects
+        foreach (Effect effect in EventManager.allEffects)
+        {
+            DrawObjectRotation(effect.texture, effect.x - Player.ship.x, -effect.y + Player.ship.y, effect.rotation, effect.size, effect.transparency);
+        }
     }
     static void DrawHealthBar(float x, float y, int width, int height, int health, int maxHealth)
     {
@@ -191,18 +193,23 @@ class Program
 
         Raylib.DrawRectangle((int)x - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)y - height / 2 + Raylib.GetScreenHeight() / 2 + borderOffset, (int)((width - (borderOffset * 2)) * percentOfHealthLeft), 30 - borderOffset * 2, Color.RED);
     }
-    static void DrawObjectRotation(Texture2D texture, float x, float y, float rotation)
+    static void DrawObjectRotation(Texture2D texture, float x, float y, float rotation, float size, float transparency)
     {
-        int width = texture.width;
-        int height = texture.height;
+        float width = texture.width;
+        float height = texture.height;
+
+
 
         Rectangle sourceRec = new Rectangle(0.0f, 0.0f, (float)width, (float)height);
 
-        Rectangle destRec = new Rectangle(x + Raylib.GetScreenWidth() / 2.0f, y + Raylib.GetScreenHeight() / 2.0f, width, height);
+        Rectangle destRec = new Rectangle(x + Raylib.GetScreenWidth() / 2.0f, y + Raylib.GetScreenHeight() / 2.0f, width * size, height * size);
 
-        Vector2 origin = new Vector2((float)width * 0.5f, (float)height * 0.5f);
+        Vector2 origin = new Vector2((float)width * size * 0.5f, (float)height * size * 0.5f);
 
-        Raylib.DrawTexturePro(texture, sourceRec, destRec, origin, rotation, Color.WHITE);
+        Color rl = new Color(255, 255, 255, (int)transparency);
+
+        Raylib.DrawTexturePro(texture, sourceRec, destRec, origin, rotation, rl);
+
     }
     static Dictionary<String, Texture2D> LoadTextures() // Load Textures
     {
