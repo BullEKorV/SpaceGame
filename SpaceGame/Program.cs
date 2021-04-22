@@ -61,7 +61,7 @@ class Program
                 if (Bullet.allBullets[i].isPlayer != isPlayer)
                 {
                     // Bullet splatter
-                    new Effect((float)(Raylib.GetTime() + 0.3), Bullet.allBullets[i].pos, 0.5f, 255f, allTextures["BulletHit"]);
+                    new Effect((float)(Raylib.GetTime() + 0.5), Bullet.allBullets[i].pos, 0.5f, 255f, allTextures["BulletHit"]);
 
                     // For explosive bullets
                     if (Bullet.allBullets[i].isExplosive == true)

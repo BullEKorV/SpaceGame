@@ -13,6 +13,7 @@ class EventManager
 
         TextBehaviour();
 
+        Console.WriteLine(allEffects.Count);
         EffectBehaviour();
     }
     static void TextBehaviour()
@@ -28,19 +29,12 @@ class EventManager
     }
     static void EffectBehaviour()
     {
-        // for (int i = 0; i < allEffects.Count; i++)
-        // {
-        //     if (allEffects[i].timeToDespawn < Raylib.GetTime())
-        //     {
-        //         allEffects.RemoveAt(i);
-        //         return;
-        //     }
-        //     allEffects[i].rotation += 1;
-        //     if (allEffects[i].rotation > 360)
-        //         allEffects[i].rotation -= 360;
-        //     allEffects[i].size *= 1.03f;
-        //     allEffects[i].transparency *= 0.92f;
-        // }
+        // Limit effects to 20 effects
+        while (allEffects.Count > 20)
+        {
+            allEffects.RemoveAt(0);
+        }
+
         foreach (Effect effect in allEffects)
         {
             if (effect.timeToDespawn < Raylib.GetTime())
@@ -51,8 +45,13 @@ class EventManager
             effect.rotation += 1;
             if (effect.rotation > 360)
                 effect.rotation -= 360;
-            effect.size *= 1.03f;
-            effect.transparency *= 0.92f;
+            effect.size += 0.02f;
+            effect.transparency -= 5;
+            if (effect.transparency <= 1)
+            {
+                allEffects.Remove(effect);
+                return;
+            }
         }
     }
 }
