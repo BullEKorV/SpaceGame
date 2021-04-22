@@ -11,7 +11,7 @@ class Enemy
     public EnemyType type;
 
     //Position variables
-    public float x, y;
+    public Vector2 pos;
 
     // Size variables
     public int width, height;
@@ -27,10 +27,9 @@ class Enemy
 
     // Shooting variables
     private int timeSinceShot, fireRate, damage;
-    public Enemy(float x, float y, int maxHealth, float speed, int damage, int fireRate, EnemyType type)
+    public Enemy(Vector2 pos, int maxHealth, float speed, int damage, int fireRate, EnemyType type)
     {
-        this.x = x;
-        this.y = y;
+        this.pos = pos;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.speed = speed;
@@ -76,9 +75,9 @@ class Enemy
     }
     static void EnemyAI(Enemy enemy)
     {
-        enemy.rotation = Program.LookAt(enemy.x, enemy.y, Player.ship.x, Player.ship.y);
+        enemy.rotation = Program.LookAt(enemy.pos, Player.ship.pos);
 
-        float distanceToPlayer = Math.Abs(enemy.y - Player.ship.y) + Math.Abs(enemy.x - Player.ship.x);
+        float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
 
         // Move closer to the player
         if (distanceToPlayer > 550)
@@ -95,9 +94,7 @@ class Enemy
         }
 
         // Calculate new position
-        var newPos = Program.CalculatePositionVelocity(enemy.x, enemy.y, enemy.velocity, enemy.rotation);
-        enemy.x = newPos.x;
-        enemy.y = newPos.y;
+        enemy.pos = Program.CalculatePositionVelocity(enemy.pos, enemy.velocity, enemy.rotation);
 
         enemy.velocity *= 0.97f;
 
@@ -108,15 +105,15 @@ class Enemy
             if (enemy.timeSinceShot > enemy.fireRate)
             {
                 if (enemy.type == EnemyType.Easy)
-                    Bullet.SpawnBullet(enemy.x, enemy.y, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false);
+                    Bullet.SpawnBullet(enemy.pos, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false);
                 else if (enemy.type == EnemyType.Hard)
                 {
                     // Shoot 2 bullets
-                    var leftCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation - 90);
-                    var rightCords = Program.CalculatePositionVelocity(enemy.x, enemy.y, 40, enemy.rotation + 90);
+                    Vector2 leftCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation - 90);
+                    Vector2 rightCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation + 90);
 
-                    Bullet.SpawnBullet(leftCords.x, leftCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
-                    Bullet.SpawnBullet(rightCords.x, rightCords.y, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
+                    Bullet.SpawnBullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
+                    Bullet.SpawnBullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
                 }
                 enemy.timeSinceShot = 0;
             }
@@ -129,7 +126,7 @@ class Enemy
         }
 
         // Check if collision with bullet
-        enemy.health -= Program.CheckBulletCollision(enemy.x, enemy.y, enemy.width, false);
+        enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);
     }
     static void EnemyDead(Enemy enemy)
     {
@@ -143,26 +140,22 @@ class Enemy
         var rnd = new Random();
 
         int side = rnd.Next(1, 5); // 1 up, 2 down, 3 left, 4 right
-        float enemyX = 0;
-        float enemyY = 0;
+
+        Vector2 pos = new Vector2(0, 0);
 
         switch (side)
         {
             case 1:
-                enemyY = Player.ship.y + Raylib.GetScreenHeight() / 2 + 200;
-                enemyX = Player.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
+                pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y + Raylib.GetScreenHeight() / 2 + 200);
                 break;
             case 2:
-                enemyY = Player.ship.y - Raylib.GetScreenHeight() / 2 - 200;
-                enemyX = Player.ship.x + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2);
+                pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y - Raylib.GetScreenHeight() / 2 - 200);
                 break;
             case 3:
-                enemyX = Player.ship.x - Raylib.GetScreenWidth() / 2 - 200;
-                enemyY = Player.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
+                pos = new Vector2(Player.ship.pos.X - Raylib.GetScreenWidth() / 2 - 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
                 break;
             case 4:
-                enemyX = Player.ship.x + Raylib.GetScreenWidth() / 2 + 200;
-                enemyY = Player.ship.y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2);
+                pos = new Vector2(Player.ship.pos.X + Raylib.GetScreenWidth() / 2 + 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
                 break;
             default:
                 break;
@@ -189,7 +182,7 @@ class Enemy
             fireRate = 20;
         }
 
-        new Enemy(enemyX, enemyY, maxHealth, speed, damage, fireRate, type);
+        new Enemy(pos, maxHealth, speed, damage, fireRate, type);
 
         allEnemies[allEnemies.Count - 1].width = enemyTexture.width;
         allEnemies[allEnemies.Count - 1].height = enemyTexture.height;

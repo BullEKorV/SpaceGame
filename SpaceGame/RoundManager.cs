@@ -1,10 +1,13 @@
 using System;
+using System.Numerics;
+using Raylib_cs;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
 class RoundManager
 {
+    public static float timeTillNextRound;
     public static Round currentRound;
     public static void GetCurrentRound(int round)
     {
@@ -13,15 +16,21 @@ class RoundManager
     }
     public static int EnemiesLeft()
     {
-        // int enemiesLefts = currentRound.enemies.easy + currentRound.enemies.hard;
         return currentRound.enemies.easy + currentRound.enemies.hard;
+    }
+    public static void RoundCompleted()
+    {
+
     }
     public static void NewRound()
     {
         if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0)
         {
             if (currentRound.round < GetLevelsJson().Count)
+            {
+                new TextBox((float)Raylib.GetTime() + 5, new Vector2(Raylib.GetScreenWidth() / 2 - 100, 30), 50, "Round " + currentRound.round, Color.WHITE);
                 GetCurrentRound(currentRound.round + 1);
+            }
         }
     }
     static List<Round> GetLevelsJson()

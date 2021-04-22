@@ -1,17 +1,16 @@
 using System;
+using System.Numerics;
 using Raylib_cs;
 using System.Collections.Generic;
 class Star
 {
     public static Dictionary<String, Star[]> allStarsChunks = new Dictionary<String, Star[]>();
-    public int x;
-    public int y;
+    public Vector2 pos;
     public int size;
     public int rotation;
-    public Star(int x, int y, int size, int rotation)
+    public Star(Vector2 pos, int size, int rotation)
     {
-        this.x = x;
-        this.y = y;
+        this.pos = pos;
         this.size = size;
         this.rotation = rotation;
     }
@@ -19,11 +18,11 @@ class Star
     static int chunkY = 1;
     public static void StarLogic()
     {
-        // TO DO... Only play when entering new chunk
-        if (chunkX != (int)Player.ship.x / Raylib.GetScreenWidth() || chunkY != (int)Player.ship.y / Raylib.GetScreenHeight())
+        // TO DO... Only play when entering new chunk                  CHANGE MAKE USE VECTOR
+        if (chunkX != (int)Player.ship.pos.X / Raylib.GetScreenWidth() || chunkY != (int)Player.ship.pos.Y / Raylib.GetScreenHeight())
         {
-            chunkX = (int)Player.ship.x / Raylib.GetScreenWidth();
-            chunkY = (int)Player.ship.y / Raylib.GetScreenHeight();
+            chunkX = (int)Player.ship.pos.X / Raylib.GetScreenWidth();
+            chunkY = (int)Player.ship.pos.Y / Raylib.GetScreenHeight();
             SpawnStars();
         }
     }
@@ -35,8 +34,7 @@ class Star
         int screenWidth = Raylib.GetScreenWidth();
         int screenHeight = Raylib.GetScreenHeight();
 
-        int tempX;
-        int tempY;
+        Vector2 tempPos;
         int tempSize;
         int tempRotation;
 
@@ -50,14 +48,14 @@ class Star
                     Star[] allStarsInChunk = new Star[starsPerChunk];
                     for (int i = 0; i < starsPerChunk; i++)
                     {
-                        tempX = rnd.Next((chunkX + x) * screenWidth, (chunkX + x) * screenWidth + screenWidth);
-                        tempY = rnd.Next((chunkY + y) * -screenHeight, (chunkY + y) * -screenHeight + screenHeight);
+                        tempPos.X = rnd.Next((chunkX + x) * screenWidth, (chunkX + x) * screenWidth + screenWidth);
+                        tempPos.Y = rnd.Next((chunkY + y) * -screenHeight, (chunkY + y) * -screenHeight + screenHeight);
 
                         tempSize = rnd.Next(6, 24);
 
                         tempRotation = rnd.Next(0, 360);
 
-                        allStarsInChunk[i] = new Star(tempX, tempY, tempSize, tempRotation);
+                        allStarsInChunk[i] = new Star(tempPos, tempSize, tempRotation);
                     }
                     allStarsChunks.Add((chunkX + x) + "-" + (chunkY + y), allStarsInChunk); // New star
                 }
@@ -77,7 +75,8 @@ class Star
                     // {
                     foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
                     {
-                        Raylib.DrawRectangle((int)star.x - (int)Player.ship.x, (int)star.y + (int)Player.ship.y, star.size, star.size, Color.YELLOW);
+                        // Program.* MAKE BETTER USE VECTOR
+                        Raylib.DrawRectangle((int)star.pos.X - (int)Player.ship.pos.X, (int)star.pos.Y + (int)Player.ship.pos.Y, star.size, star.size, Color.YELLOW);
                     }
                     // }
                 }
