@@ -1,17 +1,33 @@
 [
     {
+        "round": 0,
+        "enemies": {
+            "easy": 0,
+            "hard": 0
+        },
+        "spawnrate": 0
+    },
+    {
         "round": 1,
         "enemies": {
             "easy": 3,
             "hard": 2
         },
-        "spawnrate": 0.01
+        "spawnrate": 1
     },
     {
         "round": 2,
         "enemies": {
             "easy": 50,
             "hard": 10
+        },
+        "spawnrate": 0.1
+    },
+    {
+        "round": 3,
+        "enemies": {
+            "easy": 0,
+            "hard": 1000
         },
         "spawnrate": 0.01
     }

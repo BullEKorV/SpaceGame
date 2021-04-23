@@ -15,13 +15,13 @@ class Player
     public int width, height;
 
     // Velocity variables
-    private float xVelocity, yVelocity, speed = 0.22f;
+    private float xVelocity, yVelocity, speed = 0.23f;
 
-    // Stat variables
-    public int health, maxHealth, score;
+    // Stats
+    public int health, maxHealth, score, damage = 15;
 
-    // Shooting variables
-    private int timeSinceLaser, timeSinceExplosive, shootSpeed = 15, damage = 15;
+    // Timer variables
+    private float timeTillLaser, timeTillExplosive, timeTillHealthRegen, laserFireRate = 0.15f, explosiveFireRate = 0.3f;
 
     // Moving variables
     private bool left, right, up, down;
@@ -40,18 +40,20 @@ class Player
         ship.rotation = Program.LookAt(new Vector2(ship.pos.X + Raylib.GetScreenWidth() / 2, ship.pos.Y - Raylib.GetScreenHeight() / 2), new Vector2(ship.pos.X + Raylib.GetMouseX(), ship.pos.Y - Raylib.GetMouseY()));
 
         // Spawn bullet
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && ship.timeSinceLaser > shootSpeed)
+        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && Raylib.GetTime() > ship.timeTillLaser)
         {
             Bullet.SpawnBullet(ship.pos, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
-            ship.timeSinceLaser = 0;
+            ship.timeTillLaser = (float)Raylib.GetTime() + laserFireRate;
         }
-        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && ship.timeSinceExplosive > shootSpeed * 10)
+        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && Raylib.GetTime() > ship.timeTillExplosive)
         {
             Bullet.SpawnBullet(ship.pos, ship.rotation, ship.height / 2, 7, ship.damage * 8, true, true);
-            ship.timeSinceExplosive = 0;
+            ship.timeTillExplosive = (float)Raylib.GetTime() + explosiveFireRate;
         }
-        ship.timeSinceLaser++;
-        ship.timeSinceExplosive++;
+
+        // Regen health after a while
+        if (ship.health < ship.maxHealth && Raylib.GetTime() > ship.timeTillHealthRegen)
+            ship.health++;
 
         // Check keypresses
         KeyPresses();
@@ -66,7 +68,11 @@ class Player
         ship.yVelocity *= 0.96f;
 
         // Check collision
-        ship.health -= Program.CheckBulletCollision(ship.pos, ship.width, true);
+        int damageTaken = Program.CheckBulletCollision(ship.pos, ship.width, true);
+        ship.health -= damageTaken;
+
+        if (damageTaken > 0)
+            ship.timeTillHealthRegen = (int)Raylib.GetTime() + 5;
     }
     public void KeyPresses()
     {

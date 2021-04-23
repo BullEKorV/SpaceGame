@@ -30,10 +30,10 @@ class EventManager
     static void EffectBehaviour()
     {
         // Limit effects to 20 effects
-        while (allEffects.Count > 20)
-        {
-            allEffects.RemoveAt(0);
-        }
+        // while (allEffects.Count > 20)
+        // {
+        //     allEffects.RemoveAt(0);
+        // }
 
         foreach (Effect effect in allEffects)
         {
@@ -76,6 +76,16 @@ class Effect
         int rotation = rnd.Next(0, 360);
 
         EventManager.allEffects.Add(this);
+
+        // Deletes if already effect there
+        for (int i = 0; i < EventManager.allEffects.Count - 1; i++)
+        {
+            if (Vector2.Distance(pos, EventManager.allEffects[i].pos) < 25)
+            {
+                EventManager.allEffects.Remove(EventManager.allEffects[i]);
+                return;
+            }
+        }
     }
 }
 class TextBox

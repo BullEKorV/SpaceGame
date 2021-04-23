@@ -8,7 +8,7 @@ class Program
     public static Dictionary<String, Texture2D> allTextures = LoadTextures(); // Game Textures
     static void Main(string[] args)
     {
-        new Player(new Vector2(0, 0), 90, 100);
+        new Player(new Vector2(0, 0), 90, 500);
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
@@ -17,10 +17,15 @@ class Program
         Player.ship.width = allTextures["PlayerShip"].width;
         Player.ship.height = allTextures["PlayerShip"].height;
 
-        RoundManager.GetCurrentRound(1);
+        RoundManager.GetCurrentRound(0);
+        RoundManager.RoundCompleted();
 
         while (!Raylib.WindowShouldClose())
         {
+            // New round after pause
+            if (Raylib.GetTime() > RoundManager.timeTillNextRound && !RoundManager.roundActive)
+                RoundManager.NewRound();
+
             // Event manager code
             EventManager.ManagerCode();
 
@@ -178,13 +183,13 @@ class Program
         }
 
         // Display round
-        Raylib.DrawText(RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 35, 30, Color.WHITE);
+        Raylib.DrawText("Round: " + RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 0, 15, Color.WHITE);
 
         // Display FPS
         Raylib.DrawText(Raylib.GetFPS().ToString(), Raylib.GetScreenWidth() - 50, 10, 30, Color.WHITE);
 
         // Display player stats
-        Raylib.DrawText(Player.ship.health.ToString() + ":" + Player.ship.maxHealth.ToString(), Raylib.GetScreenWidth() / 2, 10, 30, Color.WHITE);
+        Raylib.DrawText(Player.ship.health.ToString() + ":" + Player.ship.maxHealth.ToString(), Raylib.GetScreenWidth() - 120, 50, 30, Color.WHITE);
 
         // Display player score
         Raylib.DrawText("Score : " + Player.ship.score.ToString(), 20, 10, 40, Color.YELLOW);

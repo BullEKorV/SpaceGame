@@ -5,7 +5,6 @@ using Raylib_cs;
 class Bullet
 {
     public static List<Bullet> allBullets = new List<Bullet>();
-    public bool isPlayer, isExplosive;
 
     // Position variables
     public Vector2 pos;
@@ -16,7 +15,8 @@ class Bullet
     // Velocity variables
     private float speed, xVelocity, yVelocity;
 
-    // Damage
+    // Stats
+    public bool isPlayer, isExplosive;
     public int damage;
     public Bullet(Vector2 pos, float rotation, float speed, int damage, bool isPlayer, bool isExplosive)
     {

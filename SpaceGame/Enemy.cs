@@ -22,12 +22,12 @@ class Enemy
     // Rotation
     public float rotation;
 
-    // Health variables
-    public int health, maxHealth;
+    // Stats
+    public int health, maxHealth, damage;
 
-    // Shooting variables
-    private int timeSinceShot, fireRate, damage;
-    public Enemy(Vector2 pos, int maxHealth, float speed, int damage, int fireRate, EnemyType type)
+    // Timer variables
+    private float timeTillNextShoot, fireRate;
+    public Enemy(Vector2 pos, int maxHealth, float speed, int damage, float fireRate, EnemyType type)
     {
         this.pos = pos;
         this.maxHealth = maxHealth;
@@ -99,10 +99,9 @@ class Enemy
         enemy.velocity *= 0.97f;
 
         // Shooting logic
-        enemy.timeSinceShot++;
         if (distanceToPlayer < 650)
         {
-            if (enemy.timeSinceShot > enemy.fireRate)
+            if (Raylib.GetTime() > enemy.timeTillNextShoot)
             {
                 if (enemy.type == EnemyType.Easy)
                     Bullet.SpawnBullet(enemy.pos, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false);
@@ -115,7 +114,7 @@ class Enemy
                     Bullet.SpawnBullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
                     Bullet.SpawnBullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
                 }
-                enemy.timeSinceShot = 0;
+                enemy.timeTillNextShoot = (float)Raylib.GetTime() + enemy.fireRate;
             }
         }
 
@@ -133,7 +132,7 @@ class Enemy
         allEnemies.Remove(enemy);
 
         // Check if should update to new round
-        RoundManager.NewRound();
+        RoundManager.RoundCompleted();
     }
     static void SpawnEnemy(Texture2D enemyTexture, EnemyType type)
     {
@@ -164,22 +163,22 @@ class Enemy
         int maxHealth = 0;
         float speed = 0;
         int damage = 0;
-        int fireRate = 0;
+        float fireRate = 0;
 
         // Give special enemies special stats 
         if (type == EnemyType.Easy) // Find better system
         {
             maxHealth = 100;
             speed = 0.2f;
-            damage = 5;
-            fireRate = 30;
+            damage = 10;
+            fireRate = 0.2f;
         }
         if (type == EnemyType.Hard)
         {
             maxHealth = 150;
             speed = 0.1f;
-            damage = 3;
-            fireRate = 20;
+            damage = 6;
+            fireRate = 0.5f;
         }
 
         new Enemy(pos, maxHealth, speed, damage, fireRate, type);

@@ -76,6 +76,7 @@ class Star
                     foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
                     {
                         // Program.* MAKE BETTER USE VECTOR
+                        // Raylib.DrawRectanglePro(new Rectangle(star.pos.X, star.pos.Y, star.size, star.size), star.pos - Player.ship.pos, star.rotation, Color.YELLOW);
                         Raylib.DrawRectangle((int)star.pos.X - (int)Player.ship.pos.X, (int)star.pos.Y + (int)Player.ship.pos.Y, star.size, star.size, Color.YELLOW);
                     }
                     // }
