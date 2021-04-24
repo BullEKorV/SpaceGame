@@ -72,7 +72,7 @@ class Player
         ship.health -= damageTaken;
 
         if (damageTaken > 0)
-            ship.timeTillHealthRegen = (int)Raylib.GetTime() + 5;
+            ship.timeTillHealthRegen = (int)Raylib.GetTime() + 3;
     }
     public void KeyPresses()
     {

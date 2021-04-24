@@ -8,7 +8,7 @@ class Program
     public static Dictionary<String, Texture2D> allTextures = LoadTextures(); // Game Textures
     static void Main(string[] args)
     {
-        new Player(new Vector2(0, 0), 90, 500);
+        new Player(new Vector2(0, 0), 90, 300);
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
@@ -26,6 +26,10 @@ class Program
             if (Raylib.GetTime() > RoundManager.timeTillNextRound && !RoundManager.roundActive)
                 RoundManager.NewRound();
 
+            // Spawn enemies during round
+            if (RoundManager.roundActive)
+                RoundManager.SpawnEnemies();
+
             // Event manager code
             EventManager.ManagerCode();
 
@@ -36,7 +40,7 @@ class Program
             Player.ship.PlayerControl();
 
             // Enemy AI
-            Enemy.EnemyLogic(allTextures);
+            Enemy.EnemyLogic();
 
             // Update bullets position
             Bullet.Move();
@@ -161,9 +165,9 @@ class Program
         foreach (var enemy in Enemy.allEnemies)
         {
             if (enemy.type == EnemyType.Easy)
-                DrawObjectRotation(Textures["EnemyShipEasy"], new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.rotation, 1, 255);
+                DrawObjectRotation(Textures["EnemyEasy"], new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Hard)
-                DrawObjectRotation(Textures["EnemyShipHard"], new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.rotation, 1, 255);
+                DrawObjectRotation(Textures["EnemyHard"], new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.rotation, 1, 255);
         }
         // (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y
 
@@ -241,8 +245,8 @@ class Program
     {
         Dictionary<String, Texture2D> Textures = new Dictionary<string, Texture2D>();
         Textures.Add("PlayerShip", Raylib.LoadTexture("Textures/PlayerShip.png")); // Player ship
-        Textures.Add("EnemyShipEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
-        Textures.Add("EnemyShipHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
+        Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
+        Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
 
         // Effects

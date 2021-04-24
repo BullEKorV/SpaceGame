@@ -27,8 +27,53 @@ class Enemy
 
     // Timer variables
     private float timeTillNextShoot, fireRate;
-    public Enemy(Vector2 pos, int maxHealth, float speed, int damage, float fireRate, EnemyType type)
+    public Enemy(EnemyType type)
     {
+        var rnd = new Random();
+
+        int side = rnd.Next(1, 5); // 1 up, 2 down, 3 left, 4 right
+
+        Vector2 pos = new Vector2(0, 0);
+
+        switch (side)
+        {
+            case 1:
+                pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y + Raylib.GetScreenHeight() / 2 + 200);
+                break;
+            case 2:
+                pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y - Raylib.GetScreenHeight() / 2 - 200);
+                break;
+            case 3:
+                pos = new Vector2(Player.ship.pos.X - Raylib.GetScreenWidth() / 2 - 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
+                break;
+            case 4:
+                pos = new Vector2(Player.ship.pos.X + Raylib.GetScreenWidth() / 2 + 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
+                break;
+            default:
+                break;
+        }
+
+        int maxHealth = 0;
+        float speed = 0;
+        int damage = 0;
+        float fireRate = 0;
+
+        // Give special enemies special stats 
+        if (type == EnemyType.Easy) // Find better system
+        {
+            maxHealth = 100;
+            speed = 0.2f;
+            damage = 10;
+            fireRate = 0.2f;
+        }
+        if (type == EnemyType.Hard)
+        {
+            maxHealth = 150;
+            speed = 0.1f;
+            damage = 6;
+            fireRate = 0.5f;
+        }
+
         this.pos = pos;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
@@ -36,38 +81,13 @@ class Enemy
         this.damage = damage;
         this.fireRate = fireRate;
         this.type = type;
+        this.width = Program.allTextures["EnemyEasy"].width;
+        this.height = Program.allTextures["EnemyEasy"].height;
 
         allEnemies.Add(this);
     }
-    public static void EnemyLogic(Dictionary<String, Texture2D> Textures)
+    public static void EnemyLogic()
     {
-        var rnd = new Random();
-
-        // Spawn new enemy
-        if (RoundManager.EnemiesLeft() > 0 && Raylib.GetTime() > RoundManager.currentRound.timeTillNextSpawn)
-        {
-            bool enemySpawned = false;
-
-            while (!enemySpawned)
-            {
-                int enemyToSpawn = rnd.Next(0, 2);
-
-                if (enemyToSpawn == 0 && RoundManager.currentRound.enemies.easy > 0)
-                {
-                    enemySpawned = true;
-                    SpawnEnemy(Textures["EnemyShipEasy"], EnemyType.Easy);
-                    RoundManager.currentRound.enemies.easy--;
-                }
-                if (enemyToSpawn == 1 && RoundManager.currentRound.enemies.hard > 0)
-                {
-                    enemySpawned = true;
-                    SpawnEnemy(Textures["EnemyShipHard"], EnemyType.Hard);
-                    RoundManager.currentRound.enemies.hard--;
-                }
-            }
-            RoundManager.currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + RoundManager.currentRound.spawnRate;
-        }
-
         for (int i = 0; i < allEnemies.Count; i++)
         {
             EnemyAI(allEnemies[i]);
@@ -133,59 +153,6 @@ class Enemy
 
         // Check if should update to new round
         RoundManager.RoundCompleted();
-    }
-    static void SpawnEnemy(Texture2D enemyTexture, EnemyType type)
-    {
-        var rnd = new Random();
-
-        int side = rnd.Next(1, 5); // 1 up, 2 down, 3 left, 4 right
-
-        Vector2 pos = new Vector2(0, 0);
-
-        switch (side)
-        {
-            case 1:
-                pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y + Raylib.GetScreenHeight() / 2 + 200);
-                break;
-            case 2:
-                pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y - Raylib.GetScreenHeight() / 2 - 200);
-                break;
-            case 3:
-                pos = new Vector2(Player.ship.pos.X - Raylib.GetScreenWidth() / 2 - 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
-                break;
-            case 4:
-                pos = new Vector2(Player.ship.pos.X + Raylib.GetScreenWidth() / 2 + 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
-                break;
-            default:
-                break;
-        }
-
-        int maxHealth = 0;
-        float speed = 0;
-        int damage = 0;
-        float fireRate = 0;
-
-        // Give special enemies special stats 
-        if (type == EnemyType.Easy) // Find better system
-        {
-            maxHealth = 100;
-            speed = 0.2f;
-            damage = 10;
-            fireRate = 0.2f;
-        }
-        if (type == EnemyType.Hard)
-        {
-            maxHealth = 150;
-            speed = 0.1f;
-            damage = 6;
-            fireRate = 0.5f;
-        }
-
-        new Enemy(pos, maxHealth, speed, damage, fireRate, type);
-
-        allEnemies[allEnemies.Count - 1].width = enemyTexture.width;
-        allEnemies[allEnemies.Count - 1].height = enemyTexture.height;
-
     }
 }
 enum EnemyType

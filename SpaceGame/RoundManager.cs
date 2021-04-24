@@ -11,6 +11,35 @@ class RoundManager
     public static bool roundActive = true;
     public static Round currentRound;
     private static int timeBetweenRounds = 3;
+    public static void SpawnEnemies()
+    {
+        var rnd = new Random();
+
+        // Spawn new enemy
+        if (RoundManager.EnemiesLeft() > 0 && Raylib.GetTime() > currentRound.timeTillNextSpawn)
+        {
+            bool enemySpawned = false;
+
+            while (!enemySpawned)
+            {
+                int enemyToSpawn = rnd.Next(0, 2);
+
+                if (enemyToSpawn == 0 && currentRound.enemies.easy > 0)
+                {
+                    enemySpawned = true;
+                    new Enemy(EnemyType.Easy);
+                    RoundManager.currentRound.enemies.easy--;
+                }
+                if (enemyToSpawn == 1 && currentRound.enemies.hard > 0)
+                {
+                    enemySpawned = true;
+                    new Enemy(EnemyType.Hard);
+                    currentRound.enemies.hard--;
+                }
+            }
+            currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + currentRound.spawnRate;
+        }
+    }
     public static void GetCurrentRound(int round)
     {
         currentRound = GetLevelsJson()[round];
