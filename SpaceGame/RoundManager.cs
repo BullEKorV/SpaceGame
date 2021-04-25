@@ -30,7 +30,7 @@ class RoundManager
                     new Enemy(EnemyType.Easy);
                     RoundManager.currentRound.enemies.easy--;
                 }
-                if (enemyToSpawn == 1 && currentRound.enemies.hard > 0)
+                else if (enemyToSpawn == 1 && currentRound.enemies.hard > 0)
                 {
                     enemySpawned = true;
                     new Enemy(EnemyType.Hard);

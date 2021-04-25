@@ -47,7 +47,7 @@ class Program
 
             // Render Frame
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.BLACK);
+            Raylib.ClearBackground(new Color(4, 5, 18, 255));
 
             // Render world
             RenderWorld(allTextures);
@@ -60,10 +60,6 @@ class Program
         for (int i = 0; i < Bullet.allBullets.Count; i++)
         {
             float distanceBetweenCircles = Vector2.Distance(pos, Bullet.allBullets[i].pos);
-
-            // float distanceBetweenCirclesSquared =
-            // (Bullet.allBullets[i].x - xPos) * (Bullet.allBullets[i].x - xPos) +
-            // (Bullet.allBullets[i].y - yPos) * (Bullet.allBullets[i].y - yPos);
 
             if (distanceBetweenCircles < size / 2 + 10)
             {
@@ -78,7 +74,6 @@ class Program
                         for (int y = 0; y < Enemy.allEnemies.Count; y++)
                         {
                             distanceBetweenCircles = Vector2.Distance(Bullet.allBullets[i].pos, Enemy.allEnemies[y].pos);
-
 
                             int explosionSize = 250;
                             if (distanceBetweenCircles < size / 2 + explosionSize)
@@ -107,7 +102,8 @@ class Program
                     Bullet.allBullets.Remove(Bullet.allBullets[i]);
                     return damageDealt;
                 }
-                Bullet.allBullets.Remove(Bullet.allBullets[i]);
+                if (Bullet.allBullets[i].isPlayer == false)
+                    Bullet.allBullets.Remove(Bullet.allBullets[i]);
             }
         }
         return 0;

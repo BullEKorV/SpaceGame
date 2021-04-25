@@ -74,18 +74,20 @@ class Effect
 
         var rnd = new Random();
         int rotation = rnd.Next(0, 360);
+        this.rotation = rotation;
 
-        EventManager.allEffects.Add(this);
+        bool canSpawn = true;
 
         // Deletes if already effect there
-        for (int i = 0; i < EventManager.allEffects.Count - 1; i++)
+        for (int i = 0; i < EventManager.allEffects.Count; i++)
         {
             if (Vector2.Distance(pos, EventManager.allEffects[i].pos) < 25)
             {
-                EventManager.allEffects.Remove(EventManager.allEffects[i]);
-                return;
+                canSpawn = false;
             }
         }
+        if (canSpawn)
+            EventManager.allEffects.Add(this);
     }
 }
 class TextBox
