@@ -36,14 +36,14 @@ class Program
             // Draw logic
             Star.StarLogic();
 
+            // Update bullets position
+            Bullet.Move();
+
             // Control player and spawn bullets
             Player.ship.PlayerControl();
 
             // Enemy AI
             Enemy.EnemyLogic();
-
-            // Update bullets position
-            Bullet.Move();
 
             // Render Frame
             Raylib.BeginDrawing();
@@ -215,11 +215,11 @@ class Program
     {
         float percentOfHealthLeft = ((float)health / (float)maxHealth);
 
-        int borderOffset = 3;
+        int borderOffset = 2;
 
-        Raylib.DrawRectangle((int)pos.X - width / 2 + Raylib.GetScreenWidth() / 2, (int)pos.Y - height / 2 + Raylib.GetScreenHeight() / 2, width, 30, Color.WHITE);
+        Raylib.DrawRectangle((int)pos.X - width / 2 + Raylib.GetScreenWidth() / 2, (int)pos.Y - height + Raylib.GetScreenHeight() / 2, width, 20, Color.WHITE);
 
-        Raylib.DrawRectangle((int)pos.X - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)pos.Y - height / 2 + Raylib.GetScreenHeight() / 2 + borderOffset, (int)((width - (borderOffset * 2)) * percentOfHealthLeft), 30 - borderOffset * 2, Color.RED);
+        Raylib.DrawRectangle((int)pos.X - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)pos.Y - height + Raylib.GetScreenHeight() / 2 + borderOffset, (int)((width - (borderOffset * 2)) * percentOfHealthLeft), 20 - borderOffset * 2, Color.RED);
     }
     static void DrawObjectRotation(Texture2D texture, Vector2 pos, float rotation, float size, float transparency)
     {

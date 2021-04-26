@@ -42,7 +42,12 @@ class Player
         // Spawn bullet
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && Raylib.GetTime() > ship.timeTillLaser)
         {
-            Bullet.SpawnBullet(ship.pos, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
+            Vector2 leftCords = Program.CalculatePositionVelocity(ship.pos, 40, ship.rotation - 90);
+            Vector2 rightCords = Program.CalculatePositionVelocity(ship.pos, 40, ship.rotation + 90);
+
+            Bullet.SpawnBullet(leftCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
+            Bullet.SpawnBullet(rightCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
+
             ship.timeTillLaser = (float)Raylib.GetTime() + laserFireRate;
         }
         else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && Raylib.GetTime() > ship.timeTillExplosive)
