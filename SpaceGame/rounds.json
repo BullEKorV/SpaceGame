@@ -26,9 +26,9 @@
     {
         "round": 3,
         "enemies": {
-            "easy": 0,
-            "hard": 1000
+            "easy": 10,
+            "hard": 5
         },
-        "spawnrate": 0.01
+        "spawnrate": 0.000000001
     }
 ]

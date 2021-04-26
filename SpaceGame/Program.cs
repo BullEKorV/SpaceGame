@@ -244,6 +244,7 @@ class Program
         Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
         Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
+        Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Bullet
 
         // Effects
         Textures.Add("BulletHit", Raylib.LoadTexture("Textures/BulletHit.png")); // Bullet hit
