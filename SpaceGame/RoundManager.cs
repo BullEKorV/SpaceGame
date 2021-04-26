@@ -9,6 +9,7 @@ class RoundManager
 {
     public static float timeTillNextRound;
     public static bool roundActive = true;
+    public static bool bossAlive = false;
     public static Round currentRound;
     private static int timeBetweenRounds = 3;
     public static void SpawnEnemies()
@@ -16,31 +17,35 @@ class RoundManager
         var rnd = new Random();
 
         // Spawn new enemy
-        if (RoundManager.EnemiesLeft() > 0 && Raylib.GetTime() > currentRound.timeTillNextSpawn)
+        if (Raylib.GetTime() > currentRound.timeTillNextSpawn)
         {
-            if (currentRound.enemies.boss > 0)
+            if (RoundManager.EnemiesLeft() > 0)
             {
+                bool enemySpawned = false;
+
+                while (!enemySpawned)
+                {
+                    int enemyToSpawn = rnd.Next(0, 2);
+
+                    if (enemyToSpawn == 0 && currentRound.enemies.easy > 0)
+                    {
+                        enemySpawned = true;
+                        new Enemy(EnemyType.Easy);
+                        RoundManager.currentRound.enemies.easy--;
+                    }
+                    else if (enemyToSpawn == 1 && currentRound.enemies.hard > 0)
+                    {
+                        enemySpawned = true;
+                        new Enemy(EnemyType.Hard);
+                        currentRound.enemies.hard--;
+                    }
+                }
+            }
+            else if (currentRound.enemies.boss > 0)
+            {
+                bossAlive = true;
                 new BossSun();
                 RoundManager.currentRound.enemies.boss--;
-            }
-            bool enemySpawned = false;
-
-            while (!enemySpawned)
-            {
-                int enemyToSpawn = rnd.Next(0, 2);
-
-                if (enemyToSpawn == 0 && currentRound.enemies.easy > 0)
-                {
-                    enemySpawned = true;
-                    new Enemy(EnemyType.Easy);
-                    RoundManager.currentRound.enemies.easy--;
-                }
-                else if (enemyToSpawn == 1 && currentRound.enemies.hard > 0)
-                {
-                    enemySpawned = true;
-                    new Enemy(EnemyType.Hard);
-                    currentRound.enemies.hard--;
-                }
             }
             currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + currentRound.spawnRate;
         }
@@ -52,11 +57,11 @@ class RoundManager
     }
     public static int EnemiesLeft()
     {
-        return currentRound.enemies.easy + currentRound.enemies.hard + currentRound.enemies.boss;
+        return currentRound.enemies.easy + currentRound.enemies.hard;
     }
     public static void RoundCompleted()
     {
-        if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0)
+        if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0 && bossAlive == false)
         {
             if (currentRound.round < GetLevelsJson().Count - 1)
             {

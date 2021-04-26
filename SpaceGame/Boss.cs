@@ -3,7 +3,7 @@ using Raylib_cs;
 using System.Numerics;
 class BossSun
 {
-    public static BossSun ship;
+    public static BossSun boss;
 
     //Position variables
     public Vector2 pos;
@@ -64,32 +64,47 @@ class BossSun
         this.width = Program.allTextures["BossSun"].width;
         this.height = Program.allTextures["BossSun"].height;
 
-        ship = (this);
+        boss = (this);
     }
     public static void AI()
     {
         // float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
 
         // Walk towards player
-        Vector2 velocity = ship.pos - Player.ship.pos;
+        Vector2 velocity = boss.pos - Player.ship.pos;
         velocity *= 0.003f;
-        ship.pos -= velocity;
+        boss.pos -= velocity;
 
         // Sun logic
-        if (Raylib.GetTime() > ship.sunTimeTillNextShoot)
+        if (Raylib.GetTime() > boss.sunTimeTillNextShoot)
         {
             for (int i = 0; i < 10; i++)
-                Bullet.SpawnBullet(new Vector2(ship.pos.X, ship.pos.Y + 150), ship.sunRotation + 36 * i, 50, 10, ship.damage, false, false);
-            ship.sunTimeTillNextShoot = (float)Raylib.GetTime() + ship.sunFireRate;
+                Bullet.SpawnBullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 36 * i, 50, 10, boss.damage, false, false);
+            boss.sunTimeTillNextShoot = (float)Raylib.GetTime() + boss.sunFireRate;
         }
-        ship.sunRotation++;
+        boss.sunRotation++;
+
+        if (boss.health <= 0)
+        {
+            EnemyDead(boss);
+        }
 
         // Check if collision with bullet
-        ship.health -= Program.CheckBulletCollision(ship.pos, ship.width, false);
+        boss.health -= Program.CheckBulletCollision(boss.pos, boss.width, false);
+    }
+
+    static void EnemyDead(BossSun boss)
+    {
+        boss = null; // BETTER WAY???
+
+        RoundManager.bossAlive = false;
+
+        // Check if should update to new round
+        RoundManager.RoundCompleted();
     }
     public static void DrawBoss()
     {
-        Program.DrawObjectRotation(Program.allTextures["BossSun"], ship.pos - Player.ship.pos, 0, 1, 255);
-        Program.DrawObjectRotation(Program.allTextures["Sun"], new Vector2(ship.pos.X, ship.pos.Y + 150) - Player.ship.pos, ship.sunRotation, 1, 255);
+        Program.DrawObjectRotation(Program.allTextures["BossSun"], boss.pos - Player.ship.pos, 0, 1, 255);
+        Program.DrawObjectRotation(Program.allTextures["Sun"], new Vector2(boss.pos.X, boss.pos.Y + 150) - Player.ship.pos, boss.sunRotation, 1, 255);
     }
 }

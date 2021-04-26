@@ -22,7 +22,7 @@
         "enemies": {
             "easy": 50,
             "hard": 10,
-            "boss": 1
+            "boss": 0
         },
         "spawnrate": 0.1
     },

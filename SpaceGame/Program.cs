@@ -159,13 +159,17 @@ class Program
         // Draw player health bar
         DrawHealthBar(new Vector2(0, 0), Player.ship.width, Player.ship.height, Player.ship.health, Player.ship.maxHealth);
 
-        // Draw the Boss Sun
-        if (BossSun.ship != null)
+        // Draw bosses
+        if (RoundManager.bossAlive)
         {
-            BossSun.DrawBoss();
-            DrawHealthBar(new Vector2(BossSun.ship.pos.X - Player.ship.pos.X, -BossSun.ship.pos.Y + Player.ship.pos.Y), BossSun.ship.width, BossSun.ship.height, BossSun.ship.health, BossSun.ship.maxHealth);
+            if (BossSun.boss != null)
+            {
+                BossSun.DrawBoss();
+                DrawHealthBar(new Vector2(BossSun.boss.pos.X - Player.ship.pos.X, -BossSun.boss.pos.Y + Player.ship.pos.Y), BossSun.boss.width, BossSun.boss.height, BossSun.boss.health, BossSun.boss.maxHealth);
+            }
         }
 
+        // Draw all the enemies and health bars
         foreach (var enemy in Enemy.allEnemies)
         {
             DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
@@ -175,19 +179,12 @@ class Program
             else if (enemy.type == EnemyType.Hard)
                 DrawObjectRotation(Textures["EnemyHard"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
         }
-        // (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y
 
         // Draw bullets
         foreach (var bullet in Bullet.allBullets)
         {
             DrawObjectRotation(Textures["Laser"], bullet.pos - Player.ship.pos, bullet.rotation, 1, 255);
         }
-
-        // Draw enemies health bar
-        // foreach (var enemy in Enemy.allEnemies)
-        // {
-        //     DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
-        // }
 
         // Display round
         Raylib.DrawText("Round: " + RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 0, 15, Color.WHITE);

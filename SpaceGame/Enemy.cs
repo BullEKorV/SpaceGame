@@ -96,8 +96,11 @@ class Enemy
         {
             EnemyAI(allEnemies[i]);
         }
-        if (BossSun.ship != null)
-            BossSun.AI();
+        if (RoundManager.bossAlive == true)
+        {
+            if (BossSun.boss != null)
+                BossSun.AI();
+        }
     }
     static void EnemyAI(Enemy enemy)
     {
