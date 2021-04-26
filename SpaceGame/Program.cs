@@ -221,7 +221,7 @@ class Program
 
         Raylib.DrawRectangle((int)pos.X - width / 2 + Raylib.GetScreenWidth() / 2 + borderOffset, (int)pos.Y - height + Raylib.GetScreenHeight() / 2 + borderOffset, (int)((width - (borderOffset * 2)) * percentOfHealthLeft), 20 - borderOffset * 2, Color.RED);
     }
-    static void DrawObjectRotation(Texture2D texture, Vector2 pos, float rotation, float size, float transparency)
+    public static void DrawObjectRotation(Texture2D texture, Vector2 pos, float rotation, float size, float transparency)
     {
         float width = texture.width;
         float height = texture.height;
@@ -244,7 +244,7 @@ class Program
         Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
         Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
-        Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Bullet
+        Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 
         // Effects
         Textures.Add("BulletHit", Raylib.LoadTexture("Textures/BulletHit.png")); // Bullet hit

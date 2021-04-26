@@ -6,9 +6,9 @@ class Star
 {
     public static Dictionary<String, Star[]> allStarsChunks = new Dictionary<String, Star[]>();
     public Vector2 pos;
-    public int size;
+    public float size;
     public int rotation;
-    public Star(Vector2 pos, int size, int rotation)
+    public Star(Vector2 pos, float size, int rotation)
     {
         this.pos = pos;
         this.size = size;
@@ -35,7 +35,7 @@ class Star
         int screenHeight = Raylib.GetScreenHeight();
 
         Vector2 tempPos;
-        int tempSize;
+        float tempSize;
         int tempRotation;
 
         for (int x = -1; x <= 1; x++)
@@ -51,7 +51,8 @@ class Star
                         tempPos.X = rnd.Next((chunkX + x) * screenWidth, (chunkX + x) * screenWidth + screenWidth);
                         tempPos.Y = rnd.Next((chunkY + y) * -screenHeight, (chunkY + y) * -screenHeight + screenHeight);
 
-                        tempSize = rnd.Next(6, 24);
+                        tempSize = rnd.Next(4, 13);
+                        tempSize *= 0.1f;
 
                         tempRotation = rnd.Next(0, 360);
 
@@ -71,15 +72,11 @@ class Star
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    // if (allStarsChunks.ContainsKey((chunkX + x) + "-" + (chunkY + y)))
-                    // {
                     foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
                     {
                         // Program.* MAKE BETTER USE VECTOR
-                        // Program.DrawObjectRotation(Program.allTextures["Star"], new Vector2(star.pos.X - Player.ship.pos.X, star.pos.Y + Player.ship.pos.Y), star.rotation, star.size, 255);
-                        Raylib.DrawRectangle((int)star.pos.X - (int)Player.ship.pos.X, (int)star.pos.Y + (int)Player.ship.pos.Y, star.size, star.size, Color.YELLOW);
+                        Program.DrawObjectRotation(Program.allTextures["Star"], new Vector2(star.pos.X - Player.ship.pos.X - Raylib.GetScreenWidth() / 2, star.pos.Y + Player.ship.pos.Y - Raylib.GetScreenHeight() / 2), star.rotation, star.size, 255);
                     }
-                    // }
                 }
             }
         }

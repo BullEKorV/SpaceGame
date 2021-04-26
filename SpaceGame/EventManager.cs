@@ -13,7 +13,7 @@ class EventManager
 
         TextBehaviour();
 
-        Console.WriteLine(allEffects.Count);
+        // Console.WriteLine(allEffects.Count);
         EffectBehaviour();
     }
     static void TextBehaviour()
