@@ -18,6 +18,11 @@ class RoundManager
         // Spawn new enemy
         if (RoundManager.EnemiesLeft() > 0 && Raylib.GetTime() > currentRound.timeTillNextSpawn)
         {
+            if (currentRound.enemies.boss > 0)
+            {
+                new BossSun();
+                RoundManager.currentRound.enemies.boss--;
+            }
             bool enemySpawned = false;
 
             while (!enemySpawned)
@@ -47,7 +52,7 @@ class RoundManager
     }
     public static int EnemiesLeft()
     {
-        return currentRound.enemies.easy + currentRound.enemies.hard;
+        return currentRound.enemies.easy + currentRound.enemies.hard + currentRound.enemies.boss;
     }
     public static void RoundCompleted()
     {
@@ -94,4 +99,5 @@ class EnemiesDifficulties
 {
     public int easy { get; set; }
     public int hard { get; set; }
+    public int boss { get; set; }
 }

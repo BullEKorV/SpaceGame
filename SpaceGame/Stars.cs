@@ -48,8 +48,8 @@ class Star
                     Star[] allStarsInChunk = new Star[starsPerChunk];
                     for (int i = 0; i < starsPerChunk; i++)
                     {
-                        tempPos.X = rnd.Next((chunkX + x) * screenWidth, (chunkX + x) * screenWidth + screenWidth);
-                        tempPos.Y = rnd.Next((chunkY + y) * -screenHeight, (chunkY + y) * -screenHeight + screenHeight);
+                        tempPos.X = rnd.Next((chunkX + x) * screenWidth, (chunkX + x) * screenWidth + screenWidth) - Raylib.GetScreenWidth() / 2;
+                        tempPos.Y = rnd.Next((chunkY + y) * screenHeight, (chunkY + y) * screenHeight + screenHeight) - Raylib.GetScreenHeight() / 2;
 
                         tempSize = rnd.Next(4, 13);
                         tempSize *= 0.1f;
@@ -75,7 +75,7 @@ class Star
                     foreach (Star star in allStarsChunks[(chunkX + x) + "-" + (chunkY + y)])
                     {
                         // Program.* MAKE BETTER USE VECTOR
-                        Program.DrawObjectRotation(Program.allTextures["Star"], new Vector2(star.pos.X - Player.ship.pos.X - Raylib.GetScreenWidth() / 2, star.pos.Y + Player.ship.pos.Y - Raylib.GetScreenHeight() / 2), star.rotation, star.size, 255);
+                        Program.DrawObjectRotation(Program.allTextures["Star"], star.pos - Player.ship.pos, star.rotation, star.size, 255);
                     }
                 }
             }

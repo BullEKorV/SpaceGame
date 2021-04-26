@@ -102,8 +102,6 @@ class Program
                     Bullet.allBullets.Remove(Bullet.allBullets[i]);
                     return damageDealt;
                 }
-                if (Bullet.allBullets[i].isPlayer == false)
-                    Bullet.allBullets.Remove(Bullet.allBullets[i]);
             }
         }
         return 0;
@@ -158,29 +156,38 @@ class Program
         // Draw player
         DrawObjectRotation(Textures["PlayerShip"], new Vector2(0, 0), Player.ship.rotation, 1, 255);
 
+        // Draw player health bar
+        DrawHealthBar(new Vector2(0, 0), Player.ship.width, Player.ship.height, Player.ship.health, Player.ship.maxHealth);
+
+        // Draw the Boss Sun
+        if (BossSun.ship != null)
+        {
+            BossSun.DrawBoss();
+            DrawHealthBar(new Vector2(BossSun.ship.pos.X - Player.ship.pos.X, -BossSun.ship.pos.Y + Player.ship.pos.Y), BossSun.ship.width, BossSun.ship.height, BossSun.ship.health, BossSun.ship.maxHealth);
+        }
+
         foreach (var enemy in Enemy.allEnemies)
         {
+            DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
+
             if (enemy.type == EnemyType.Easy)
-                DrawObjectRotation(Textures["EnemyEasy"], new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.rotation, 1, 255);
+                DrawObjectRotation(Textures["EnemyEasy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Hard)
-                DrawObjectRotation(Textures["EnemyHard"], new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.rotation, 1, 255);
+                DrawObjectRotation(Textures["EnemyHard"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
         }
         // (int)enemy.x - (int)Player.ship.x, -(int)enemy.y + (int)Player.ship.y
 
         // Draw bullets
         foreach (var bullet in Bullet.allBullets)
         {
-            DrawObjectRotation(Textures["Laser"], new Vector2(bullet.pos.X - Player.ship.pos.X, -bullet.pos.Y + Player.ship.pos.Y), bullet.rotation, 1, 255);
+            DrawObjectRotation(Textures["Laser"], bullet.pos - Player.ship.pos, bullet.rotation, 1, 255);
         }
-
-        // Draw player health bar
-        DrawHealthBar(new Vector2(0, 0), Player.ship.width, Player.ship.height, Player.ship.health, Player.ship.maxHealth);
 
         // Draw enemies health bar
-        foreach (var enemy in Enemy.allEnemies)
-        {
-            DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
-        }
+        // foreach (var enemy in Enemy.allEnemies)
+        // {
+        //     DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
+        // }
 
         // Display round
         Raylib.DrawText("Round: " + RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 0, 15, Color.WHITE);
@@ -203,7 +210,7 @@ class Program
         // Draw effects
         foreach (Effect effect in EventManager.allEffects)
         {
-            DrawObjectRotation(effect.texture, new Vector2(effect.pos.X - Player.ship.pos.X, -effect.pos.Y + Player.ship.pos.Y), effect.rotation, effect.size, effect.transparency);
+            DrawObjectRotation(effect.texture, effect.pos - Player.ship.pos, effect.rotation, effect.size, effect.transparency);
         }
         foreach (TextBox text in EventManager.allTexts)
         {
@@ -228,7 +235,7 @@ class Program
 
         Rectangle sourceRec = new Rectangle(0.0f, 0.0f, (float)width, (float)height);
 
-        Rectangle destRec = new Rectangle(pos.X + Raylib.GetScreenWidth() / 2.0f, pos.Y + Raylib.GetScreenHeight() / 2.0f, width * size, height * size);
+        Rectangle destRec = new Rectangle(pos.X + Raylib.GetScreenWidth() / 2.0f, -pos.Y + Raylib.GetScreenHeight() / 2.0f, width * size, height * size);
 
         Vector2 origin = new Vector2((float)width * size * 0.5f, (float)height * size * 0.5f);
 
@@ -243,6 +250,8 @@ class Program
         Textures.Add("PlayerShip", Raylib.LoadTexture("Textures/PlayerShip.png")); // Player ship
         Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
         Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
+        Textures.Add("BossSun", Raylib.LoadTexture("Textures/BossSun.png")); // Boss
+        Textures.Add("Sun", Raylib.LoadTexture("Textures/Sun.png")); // Boss sun
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
         Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 

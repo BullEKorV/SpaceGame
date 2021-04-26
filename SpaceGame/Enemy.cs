@@ -96,6 +96,8 @@ class Enemy
         {
             EnemyAI(allEnemies[i]);
         }
+        if (BossSun.ship != null)
+            BossSun.AI();
     }
     static void EnemyAI(Enemy enemy)
     {
@@ -159,118 +161,6 @@ class Enemy
         RoundManager.RoundCompleted();
     }
 }
-// class Boss
-// {
-//     public static Boss ship;
-
-//     //Position variables
-//     public Vector2 pos;
-
-//     // Size variables
-//     public int width, height;
-
-//     // Velocity variables
-//     private float velocity, speed;
-
-//     // Rotation
-//     public float rotation;
-
-//     // Stats
-//     public int health, maxHealth, damage, shootingReach;
-
-//     // Timer variables
-//     private float timeTillNextShoot, fireRate;
-//     public Boss()
-//     {
-//         var rnd = new Random();
-
-//         int side = rnd.Next(1, 5); // 1 up, 2 down, 3 left, 4 right
-
-//         Vector2 pos = new Vector2(0, 0);
-
-//         switch (side)
-//         {
-//             case 1:
-//                 pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y + Raylib.GetScreenHeight() / 2 + 200);
-//                 break;
-//             case 2:
-//                 pos = new Vector2(Player.ship.pos.X + rnd.Next(-Raylib.GetScreenWidth() / 2, Raylib.GetScreenWidth() / 2), Player.ship.pos.Y - Raylib.GetScreenHeight() / 2 - 200);
-//                 break;
-//             case 3:
-//                 pos = new Vector2(Player.ship.pos.X - Raylib.GetScreenWidth() / 2 - 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
-//                 break;
-//             case 4:
-//                 pos = new Vector2(Player.ship.pos.X + Raylib.GetScreenWidth() / 2 + 200, Player.ship.pos.Y + rnd.Next(-Raylib.GetScreenHeight() / 2, Raylib.GetScreenHeight() / 2));
-//                 break;
-//             default:
-//                 break;
-//         }
-
-//         int maxHealth = 0;
-//         float speed = 0;
-//         int damage = 0;
-//         float fireRate = 0;
-//         int shootingReach = 0;
-
-//         // Give special enemies special stats 
-//         if (type == EnemyType.Easy) // Find better system
-//         {
-//             maxHealth = 100;
-//             speed = 0.21f;
-//             damage = 10;
-//             fireRate = 0.2f;
-//             shootingReach = 400;
-//         }
-//         if (type == EnemyType.Hard)
-//         {
-//             maxHealth = 200;
-//             speed = 0.14f;
-//             damage = 6;
-//             fireRate = 0.4f;
-//             shootingReach = 550;
-//         }
-
-//         this.pos = pos;
-//         this.maxHealth = maxHealth;
-//         this.health = maxHealth;
-//         this.speed = speed;
-//         this.damage = damage;
-//         this.fireRate = fireRate;
-//         this.type = type;
-//         this.shootingReach = shootingReach;
-//         this.width = Program.allTextures["EnemyEasy"].width;
-//         this.height = Program.allTextures["EnemyEasy"].height;
-
-//         allEnemies.Add(this);
-//     }
-//     public static void EnemyLogic()
-//     {
-//         for (int i = 0; i < allEnemies.Count; i++)
-//         {
-//             EnemyAI(allEnemies[i]);
-//         }
-//     }
-//     static void EnemyAI(Enemy enemy)
-//     {
-//         enemy.rotation = Program.LookAt(enemy.pos, Player.ship.pos);
-
-//         float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
-
-//         // Move closer to the player
-//         if (distanceToPlayer > enemy.shootingReach)
-//         {
-//             enemy.velocity += enemy.speed;
-//             // if (enemy.velocity > 3)
-//             //     enemy.velocity = 3;
-//         }
-//         else if (distanceToPlayer < enemy.shootingReach / 2)
-//         {
-//             enemy.velocity -= enemy.speed * 2;
-//             // if (enemy.velocity < -6)
-//             //     enemy.velocity = -6;
-//         }
-//     }
-// }
 enum EnemyType
 {
     Easy,
