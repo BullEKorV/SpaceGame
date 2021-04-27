@@ -14,7 +14,7 @@ class Bullet
 
     // Stats
     public bool isPlayer, isExplosive, isHoming;
-    public int damage;
+    public int damage, health;
     public Bullet(Vector2 pos, float rotation, int offset, float speed, int damage, bool isPlayer, bool isExplosive, bool isHoming)
     {
         pos = Program.CalculatePositionVelocity(pos, offset, rotation);
@@ -27,6 +27,9 @@ class Bullet
         this.isPlayer = isPlayer;
         this.isExplosive = isExplosive;
         this.isHoming = isHoming;
+
+        if (isHoming)
+            this.health = 4;
 
         allBullets.Add(this);
     }
@@ -49,7 +52,7 @@ class Bullet
                     {
                         if (Vector2.Distance(allBullets[i].pos, allPlayerBullets[y].pos) < 20)
                         {
-                            allBullets.RemoveAt(i);
+                            allBullets[i].health--;
                             allBullets.Remove(allPlayerBullets[y]);
                         }
                     }
@@ -59,7 +62,7 @@ class Bullet
             allBullets[i].pos = Program.CalculatePosition(allBullets[i].pos, allBullets[i].velocity);
 
             // Delete bullet if too far away
-            if (Vector2.Distance(allBullets[i].pos, Player.ship.pos) > 1400)
+            if (Vector2.Distance(allBullets[i].pos, Player.ship.pos) > 1400 || (allBullets[i].health == 0 && allBullets[i].isHoming))
             {
                 allBullets.Remove(allBullets[i]);
             }
