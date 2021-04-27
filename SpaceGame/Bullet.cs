@@ -7,25 +7,26 @@ class Bullet
     public static List<Bullet> allBullets = new List<Bullet>();
 
     // Position variables
-    public Vector2 pos;
+    public Vector2 pos, velocity;
 
-    // Rotation variable
-    public float rotation;
-
-    // Velocity variables
-    private float speed, xVelocity, yVelocity;
+    // Move variables
+    public float rotation, speed;
 
     // Stats
-    public bool isPlayer, isExplosive;
+    public bool isPlayer, isExplosive, isHoming;
     public int damage;
-    public Bullet(Vector2 pos, float rotation, float speed, int damage, bool isPlayer, bool isExplosive)
+    public Bullet(Vector2 pos, float rotation, int offset, float speed, int damage, bool isPlayer, bool isExplosive, bool isHoming)
     {
+        pos = Program.CalculatePositionVelocity(pos, offset, rotation);
+
+        this.velocity = Program.CalculatePositionVelocity(new Vector2(0, 0), speed, rotation);
         this.rotation = rotation;
         this.pos = pos;
         this.speed = speed;
         this.damage = damage;
         this.isPlayer = isPlayer;
         this.isExplosive = isExplosive;
+        this.isHoming = isHoming;
 
         allBullets.Add(this);
     }
@@ -33,28 +34,19 @@ class Bullet
     {
         for (int i = 0; i < allBullets.Count; i++)
         {
-            allBullets[i].pos = Program.CalculatePosition(allBullets[i].pos, allBullets[i].xVelocity, allBullets[i].yVelocity);
+            if (allBullets[i].isHoming)
+            {
+                allBullets[i].rotation = Program.LookAt(allBullets[i].pos, Player.ship.pos);
+                allBullets[i].velocity = Program.CalculatePositionVelocity(new Vector2(0, 0), allBullets[i].speed, allBullets[i].rotation);
+            }
 
-            // Delete bullet if too far away                                    CHANGE MAKE USE VECTOR
+            allBullets[i].pos = Program.CalculatePosition(allBullets[i].pos, allBullets[i].velocity);
+
+            // Delete bullet if too far away
             if (Vector2.Distance(allBullets[i].pos, Player.ship.pos) > 1400)
             {
                 allBullets.Remove(allBullets[i]);
             }
         }
-    }
-    public static void SpawnBullet(Vector2 pos, float rotation, int shipHeight, float speed, int damage, bool isPlayer, bool isExplosive)
-    {
-        Vector2 newPos = Program.CalculatePositionVelocity(pos, shipHeight, rotation);
-
-        // allBullets.Add(new Bullet(xPos, yPos, rotation, 10, "player"));
-        new Bullet(newPos, rotation, speed, damage, isPlayer, isExplosive);
-
-        // Calculate x and y velocity
-        var newVelocity = Program.CalculatePositionVelocity(new Vector2(0, 0), allBullets[allBullets.Count - 1].speed, rotation);
-        float xVelocity = newVelocity.X;
-        float yVelocity = newVelocity.Y;
-
-        allBullets[allBullets.Count - 1].xVelocity = xVelocity;
-        allBullets[allBullets.Count - 1].yVelocity = yVelocity;
     }
 }

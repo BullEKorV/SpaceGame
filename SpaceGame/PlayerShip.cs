@@ -6,7 +6,7 @@ class Player
     public static Player ship;
 
     //Position variables
-    public Vector2 pos;
+    public Vector2 pos, velocity;
 
     // Rotation
     public float rotation;
@@ -15,7 +15,7 @@ class Player
     public int width, height;
 
     // Velocity variables
-    private float xVelocity, yVelocity, speed = 0.23f;
+    private float speed = 0.23f;
 
     // Stats
     public int health, maxHealth, score, damage = 15;
@@ -45,14 +45,14 @@ class Player
             Vector2 leftCords = Program.CalculatePositionVelocity(ship.pos, 40, ship.rotation - 90);
             Vector2 rightCords = Program.CalculatePositionVelocity(ship.pos, 40, ship.rotation + 90);
 
-            Bullet.SpawnBullet(leftCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
-            Bullet.SpawnBullet(rightCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false);
+            new Bullet(leftCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false, false);
+            new Bullet(rightCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false, false);
 
             ship.timeTillLaser = (float)Raylib.GetTime() + laserFireRate;
         }
         else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON) && Raylib.GetTime() > ship.timeTillExplosive)
         {
-            Bullet.SpawnBullet(ship.pos, ship.rotation, ship.height / 2, 7, ship.damage * 8, true, true);
+            new Bullet(ship.pos, ship.rotation, ship.height / 2, 7, ship.damage * 8, true, true, false);
             ship.timeTillExplosive = (float)Raylib.GetTime() + explosiveFireRate;
         }
 
@@ -67,10 +67,9 @@ class Player
         CalculateVelocity();
 
         // Calculate new position
-        ship.pos = Program.CalculatePosition(ship.pos, ship.xVelocity, ship.yVelocity);
+        ship.pos = Program.CalculatePosition(ship.pos, ship.velocity);
 
-        ship.xVelocity *= 0.96f;
-        ship.yVelocity *= 0.96f;
+        ship.velocity *= 0.96f;
 
         // Check collision
         int damageTaken = Program.CheckBulletCollision(ship.pos, ship.width, true);
@@ -97,12 +96,12 @@ class Player
     public void CalculateVelocity()
     {
         if (up)
-            yVelocity += speed;
+            ship.velocity.Y += speed;
         if (down)
-            yVelocity -= speed;
+            ship.velocity.Y -= speed;
         if (left)
-            xVelocity -= speed;
+            ship.velocity.X -= speed;
         if (right)
-            xVelocity += speed;
+            ship.velocity.X += speed;
     }
 }

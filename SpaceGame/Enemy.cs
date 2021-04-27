@@ -133,15 +133,15 @@ class Enemy
             if (Raylib.GetTime() > enemy.timeTillNextShoot)
             {
                 if (enemy.type == EnemyType.Easy)
-                    Bullet.SpawnBullet(enemy.pos, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false);
+                    new Bullet(enemy.pos, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false, false);
                 else if (enemy.type == EnemyType.Hard)
                 {
                     // Shoot 2 bullets
                     Vector2 leftCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation - 90);
                     Vector2 rightCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation + 90);
 
-                    Bullet.SpawnBullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
-                    Bullet.SpawnBullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false);
+                    new Bullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false, false);
+                    new Bullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false, false);
                 }
                 enemy.timeTillNextShoot = (float)Raylib.GetTime() + enemy.fireRate;
             }

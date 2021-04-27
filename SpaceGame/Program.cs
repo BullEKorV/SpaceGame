@@ -138,9 +138,9 @@ class Program
 
         return newPos;
     }
-    static public Vector2 CalculatePosition(Vector2 pos, float xVelocity, float yVelocity)
+    static public Vector2 CalculatePosition(Vector2 pos, Vector2 velocity)
     {
-        Vector2 newPos = new Vector2(pos.X + xVelocity, pos.Y + yVelocity);
+        Vector2 newPos = Vector2.Add(pos, velocity);
 
         return newPos;
     }

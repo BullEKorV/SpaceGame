@@ -48,7 +48,7 @@ class BossSun
                 break;
         }
 
-        int maxHealth = 200;
+        int maxHealth = 1000;
         float speed = 0.003f;
         int damage = 10;
         float fireRate = 0.2f;
@@ -71,15 +71,14 @@ class BossSun
         // float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
 
         // Walk towards player
-        Vector2 velocity = boss.pos - Player.ship.pos;
-        velocity *= 0.003f;
+        Vector2 velocity = Vector2.Subtract(boss.pos, Player.ship.pos) * 0.003f;
         boss.pos -= velocity;
 
         // Sun logic
         if (Raylib.GetTime() > boss.sunTimeTillNextShoot)
         {
             for (int i = 0; i < 10; i++)
-                Bullet.SpawnBullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 36 * i, 50, 10, boss.damage, false, false);
+                new Bullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 36 * i, 50, 10, boss.damage, false, true, false);
             boss.sunTimeTillNextShoot = (float)Raylib.GetTime() + boss.sunFireRate;
         }
         boss.sunRotation++;
