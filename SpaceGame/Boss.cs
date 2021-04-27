@@ -18,7 +18,7 @@ class BossSun
     public int health, maxHealth, damage;
 
     // Timer variables
-    private float timeTillNextShoot, fireRate;
+    private float timeTillNextMissile, fireRate;
 
     // Sun variables
     private float sunRotation, sunTimeTillNextShoot, sunFireRate;
@@ -51,7 +51,7 @@ class BossSun
         int maxHealth = 1000;
         float speed = 0.003f;
         int damage = 10;
-        float fireRate = 0.2f;
+        float fireRate = 2f;
         float sunFireRate = 1f;
 
         this.pos = pos;
@@ -68,7 +68,7 @@ class BossSun
     }
     public static void AI()
     {
-        // float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
+        float distanceToPlayer = Vector2.Distance(boss.pos, Player.ship.pos);
 
         // Walk towards player
         Vector2 velocity = Vector2.Subtract(boss.pos, Player.ship.pos) * 0.003f;
@@ -78,18 +78,28 @@ class BossSun
         if (Raylib.GetTime() > boss.sunTimeTillNextShoot)
         {
             for (int i = 0; i < 10; i++)
-                new Bullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 36 * i, 50, 10, boss.damage, false, true, false);
+                new Bullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 36 * i, 50, 10, boss.damage, false, false, false);
             boss.sunTimeTillNextShoot = (float)Raylib.GetTime() + boss.sunFireRate;
         }
         boss.sunRotation++;
+
+        // Homing missiles
+        if (Raylib.GetTime() > boss.timeTillNextMissile)
+        {
+            new Bullet(new Vector2(boss.pos.X, boss.pos.Y), 0, 0, 6, boss.damage, false, true, true);
+            boss.timeTillNextMissile = (float)Raylib.GetTime() + boss.fireRate;
+        }
+
+        if (distanceToPlayer < boss.width / 2 + Player.ship.width / 2)
+            Player.ship.health -= 2;
+
+        // Check if collision with bullet
+        boss.health -= Program.CheckBulletCollision(boss.pos, boss.width, false);
 
         if (boss.health <= 0)
         {
             EnemyDead(boss);
         }
-
-        // Check if collision with bullet
-        boss.health -= Program.CheckBulletCollision(boss.pos, boss.width, false);
     }
 
     static void EnemyDead(BossSun boss)

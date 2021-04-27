@@ -153,12 +153,6 @@ class Program
         // Draw stars
         Star.DrawStars();
 
-        // Draw player
-        DrawObjectRotation(Textures["PlayerShip"], new Vector2(0, 0), Player.ship.rotation, 1, 255);
-
-        // Draw player health bar
-        DrawHealthBar(new Vector2(0, 0), Player.ship.width, Player.ship.height, Player.ship.health, Player.ship.maxHealth);
-
         // Draw bosses
         if (RoundManager.bossAlive)
         {
@@ -169,22 +163,35 @@ class Program
             }
         }
 
-        // Draw all the enemies and health bars
-        foreach (var enemy in Enemy.allEnemies)
+        // Draw all the enemies
+        foreach (Enemy enemy in Enemy.allEnemies)
         {
-            DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
-
             if (enemy.type == EnemyType.Easy)
                 DrawObjectRotation(Textures["EnemyEasy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Hard)
                 DrawObjectRotation(Textures["EnemyHard"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
         }
+        // Draw all the enemy healthbars
+        foreach (Enemy enemy in Enemy.allEnemies)
+        {
+            DrawHealthBar(new Vector2(enemy.pos.X - Player.ship.pos.X, -enemy.pos.Y + Player.ship.pos.Y), enemy.width, enemy.height, enemy.health, enemy.maxHealth);
+        }
 
         // Draw bullets
         foreach (var bullet in Bullet.allBullets)
         {
-            DrawObjectRotation(Textures["Laser"], bullet.pos - Player.ship.pos, bullet.rotation, 1, 255);
+            if (bullet.isExplosive)
+                DrawObjectRotation(Textures["Bomb"], bullet.pos - Player.ship.pos, bullet.rotation, 1, 255);
+
+            else
+                DrawObjectRotation(Textures["Laser"], bullet.pos - Player.ship.pos, bullet.rotation, 1, 255);
         }
+
+        // Draw player
+        DrawObjectRotation(Textures["PlayerShip"], new Vector2(0, 0), Player.ship.rotation, 1, 255);
+
+        // Draw player health bar
+        DrawHealthBar(new Vector2(0, 0), Player.ship.width, Player.ship.height, Player.ship.health, Player.ship.maxHealth);
 
         // Display round
         Raylib.DrawText("Round: " + RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 0, 15, Color.WHITE);
@@ -250,6 +257,7 @@ class Program
         Textures.Add("BossSun", Raylib.LoadTexture("Textures/BossSun.png")); // Boss
         Textures.Add("Sun", Raylib.LoadTexture("Textures/Sun.png")); // Boss sun
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
+        Textures.Add("Bomb", Raylib.LoadTexture("Textures/Bomb.png")); // Bomb
         Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 
         // Effects

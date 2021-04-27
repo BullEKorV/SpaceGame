@@ -23,8 +23,6 @@ class Player
     // Timer variables
     private float timeTillLaser, timeTillExplosive, timeTillHealthRegen, laserFireRate = 0.15f, explosiveFireRate = 0.3f;
 
-    // Moving variables
-    private bool left, right, up, down;
     public Player(Vector2 pos, float rotation, int maxHealth)
     {
         this.pos = pos;
@@ -61,7 +59,7 @@ class Player
             ship.health++;
 
         // Check keypresses
-        KeyPresses();
+        // KeyPresses();
 
         // Calculate velocity
         CalculateVelocity();
@@ -78,30 +76,15 @@ class Player
         if (damageTaken > 0)
             ship.timeTillHealthRegen = (int)Raylib.GetTime() + 3;
     }
-    public void KeyPresses()
-    {
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
-            up = true;
-        else up = false;
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
-            down = true;
-        else down = false;
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            left = true;
-        else left = false;
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            right = true;
-        else right = false;
-    }
     public void CalculateVelocity()
     {
-        if (up)
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
             ship.velocity.Y += speed;
-        if (down)
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
             ship.velocity.Y -= speed;
-        if (left)
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
             ship.velocity.X -= speed;
-        if (right)
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
             ship.velocity.X += speed;
     }
 }

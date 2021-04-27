@@ -38,6 +38,13 @@ class Bullet
             {
                 allBullets[i].rotation = Program.LookAt(allBullets[i].pos, Player.ship.pos);
                 allBullets[i].velocity = Program.CalculatePositionVelocity(new Vector2(0, 0), allBullets[i].speed, allBullets[i].rotation);
+
+                List<Bullet> allNonHoming = new List<Bullet>().FindAll(x => x.isHoming == false);
+                for (int y = 0; y < allNonHoming.Count; y++)
+                {
+                    if (Vector2.Distance(allBullets[i].pos, allNonHoming[y].pos) < 20)
+                        allBullets.RemoveAt(i);
+                } // Fix
             }
 
             allBullets[i].pos = Program.CalculatePosition(allBullets[i].pos, allBullets[i].velocity);

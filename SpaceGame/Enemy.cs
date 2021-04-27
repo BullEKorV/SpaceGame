@@ -147,14 +147,14 @@ class Enemy
             }
         }
 
+        // Check if collision with bullet
+        enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);
+
         // Check if dead
         if (enemy.health <= 0)
         {
             EnemyDead(enemy);
         }
-
-        // Check if collision with bullet
-        enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);
     }
     static void EnemyDead(Enemy enemy)
     {
