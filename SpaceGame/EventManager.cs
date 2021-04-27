@@ -29,12 +29,6 @@ class EventManager
     }
     static void EffectBehaviour()
     {
-        // Limit effects to 20 effects
-        // while (allEffects.Count > 20)
-        // {
-        //     allEffects.RemoveAt(0);
-        // }
-
         foreach (Effect effect in allEffects)
         {
             if (effect.timeToDespawn < Raylib.GetTime())
