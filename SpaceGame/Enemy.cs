@@ -68,13 +68,22 @@ class Enemy
             fireRate = 0.2f;
             shootingReach = 400;
         }
-        if (type == EnemyType.Hard)
+        else if (type == EnemyType.Hard)
         {
             maxHealth = 200;
             speed = 0.14f;
             damage = 6;
             fireRate = 0.4f;
             shootingReach = 550;
+        }
+        else if (type == EnemyType.Dummy)
+        {
+            maxHealth = 200;
+            speed = 0.0f;
+            damage = 0;
+            fireRate = 0.4f;
+            shootingReach = 0;
+            pos = new Vector2(200, 0);
         }
 
         this.pos = pos;

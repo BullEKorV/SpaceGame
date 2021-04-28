@@ -24,7 +24,7 @@
             "hard": 10,
             "boss": 0
         },
-        "spawnrate": 0.1
+        "spawnrate": 1
     },
     {
         "round": 3,

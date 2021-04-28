@@ -47,7 +47,7 @@ class Bullet
                 {
                     List<Bullet> allPlayerBullets = allBullets.FindAll(x => x.isPlayer == true);
 
-                    Console.WriteLine(allPlayerBullets.Count);
+                    // Console.WriteLine(allPlayerBullets.Count);
                     for (int y = 0; y < allPlayerBullets.Count; y++)
                     {
                         if (Vector2.Distance(allBullets[i].pos, allPlayerBullets[y].pos) < 20)

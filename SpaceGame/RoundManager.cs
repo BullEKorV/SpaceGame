@@ -14,10 +14,14 @@ class RoundManager
     private static int timeBetweenRounds = 3;
     public static void SpawnEnemies()
     {
+        // Spawn dummy Enemy first round
+        if (currentRound.round == 0 && Enemy.allEnemies.Count == 0)
+            new Enemy(EnemyType.Dummy);
+
         var rnd = new Random();
 
         // Spawn new enemy
-        if (Raylib.GetTime() > currentRound.timeTillNextSpawn)
+        if (Raylib.GetTime() > currentRound.timeTillNextSpawn && Enemy.allEnemies.Count < 10)
         {
             if (RoundManager.EnemiesLeft() > 0)
             {
@@ -61,6 +65,8 @@ class RoundManager
     }
     public static void RoundCompleted()
     {
+        if (currentRound.round == 0)
+            EventManager.allTexts.Clear();
         if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0 && bossAlive == false)
         {
             if (currentRound.round < GetLevelsJson().Count - 1)

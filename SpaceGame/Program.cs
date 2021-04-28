@@ -18,7 +18,8 @@ class Program
         Player.ship.height = allTextures["PlayerShip"].height;
 
         RoundManager.GetCurrentRound(0);
-        RoundManager.RoundCompleted();
+        new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 3 + 120, 25), 40, "Welcome to SpaceGame!", Color.WHITE);
+        new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 5, 80), 25, "You move around with WASD\nYou shoot lasers with left mouse button and explosive bullets with right mouse button\nYou'll have to dodge the enemies which comes in rounds with increasing difficulty.\nKill the dummy enemy when you're ready!", Color.WHITE);
 
         while (!Raylib.WindowShouldClose())
         {
@@ -170,6 +171,9 @@ class Program
                 DrawObjectRotation(Textures["EnemyEasy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Hard)
                 DrawObjectRotation(Textures["EnemyHard"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
+            else if (enemy.type == EnemyType.Dummy)
+                DrawObjectRotation(Textures["EnemyEasy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
+
         }
         // Draw all the enemy healthbars
         foreach (Enemy enemy in Enemy.allEnemies)
@@ -194,7 +198,7 @@ class Program
         DrawHealthBar(new Vector2(0, 0), Player.ship.width, Player.ship.height, Player.ship.health, Player.ship.maxHealth);
 
         // Display round
-        Raylib.DrawText("Round: " + RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 0, 15, Color.WHITE);
+        // Raylib.DrawText("Round: " + RoundManager.currentRound.round.ToString(), Raylib.GetScreenWidth() / 2, 0, 15, Color.WHITE);
 
         // Display FPS
         Raylib.DrawText(Raylib.GetFPS().ToString(), Raylib.GetScreenWidth() - 50, 10, 30, Color.WHITE);
