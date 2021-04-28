@@ -52,7 +52,10 @@ class Bullet
                     {
                         if (Vector2.Distance(allBullets[i].pos, allPlayerBullets[y].pos) < 20)
                         {
-                            allBullets[i].health--;
+                            if (allPlayerBullets[y].isExplosive)
+                                allBullets[i].health -= 4;
+                            else
+                                allBullets[i].health--;
                             allBullets.Remove(allPlayerBullets[y]);
                         }
                     }
