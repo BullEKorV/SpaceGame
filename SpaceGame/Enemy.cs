@@ -167,5 +167,6 @@ class Enemy
 enum EnemyType
 {
     Easy,
-    Hard
+    Hard,
+    Dummy
 }
