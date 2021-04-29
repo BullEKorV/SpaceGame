@@ -40,8 +40,8 @@ class Player
         // Spawn bullet
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && Raylib.GetTime() > ship.timeTillLaser)
         {
-            Vector2 leftCords = Program.CalculatePositionVelocity(ship.pos, 40, ship.rotation - 90);
-            Vector2 rightCords = Program.CalculatePositionVelocity(ship.pos, 40, ship.rotation + 90);
+            Vector2 leftCords = Program.CalculatePositionVelocity(ship.pos, 35, ship.rotation - 90);
+            Vector2 rightCords = Program.CalculatePositionVelocity(ship.pos, 35, ship.rotation + 90);
 
             new Bullet(leftCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false, false);
             new Bullet(rightCords, ship.rotation, ship.height / 2, 20, ship.damage, true, false, false);

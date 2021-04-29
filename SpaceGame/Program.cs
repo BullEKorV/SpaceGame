@@ -48,7 +48,7 @@ class Program
 
             // Render Frame
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(new Color(4, 5, 18, 255));
+            Raylib.ClearBackground(new Color(2, 2, 2, 255));
 
             // Render world
             RenderWorld(allTextures);
@@ -257,8 +257,8 @@ class Program
     {
         Dictionary<String, Texture2D> Textures = new Dictionary<string, Texture2D>();
         Textures.Add("PlayerShip", Raylib.LoadTexture("Textures/PlayerShip.png")); // Player ship
-        Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
-        Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
+        Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyEasy.png")); // Enemy ship easy
+        Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyHard.png")); // Enemy ship hard
         Textures.Add("EnemyKamikaze", Raylib.LoadTexture("Textures/EnemyKamikaze.png")); // Enemy kamikaze
         Textures.Add("EnemyDummy", Raylib.LoadTexture("Textures/EnemyDummy.png")); // Enemy dummy
 
