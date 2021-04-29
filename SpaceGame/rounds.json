@@ -12,9 +12,9 @@
     {
         "round": 1,
         "enemies": {
-            "easy": 0,
-            "hard": 0,
-            "kamikaze": 100,
+            "easy": 30,
+            "hard": 3,
+            "kamikaze": 0,
             "boss": 0
         },
         "spawnrate": 0.0001

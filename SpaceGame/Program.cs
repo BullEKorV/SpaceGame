@@ -134,7 +134,6 @@ class Program
         double radians = (Math.PI / 180) * rotation;
 
         newPos.X = (float)(newPos.X + velocity * Math.Sin(radians));
-
         newPos.Y = (float)(newPos.Y + velocity * Math.Cos(radians));
 
         return newPos;
