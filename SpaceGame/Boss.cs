@@ -48,11 +48,11 @@ class BossSun
                 break;
         }
 
-        int maxHealth = 1000;
-        float speed = 0.003f;
+        int maxHealth = 1500;
+        float speed = 0.004f;
         int damage = 10;
-        float fireRate = 2f;
-        float sunFireRate = 1f;
+        float fireRate = 1.5f;
+        float sunFireRate = 0.08f;
 
         this.pos = pos;
         this.maxHealth = maxHealth;
@@ -77,16 +77,16 @@ class BossSun
         // Sun logic
         if (Raylib.GetTime() > boss.sunTimeTillNextShoot)
         {
-            for (int i = 0; i < 10; i++)
-                new Bullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 36 * i, 50, 10, boss.damage, false, false, false);
+            for (int i = 0; i < 8; i++)
+                new Bullet(new Vector2(boss.pos.X, boss.pos.Y + 150), boss.sunRotation + 45 * i, 50, 10, boss.damage, false, false, false);
             boss.sunTimeTillNextShoot = (float)Raylib.GetTime() + boss.sunFireRate;
         }
-        boss.sunRotation++;
+        boss.sunRotation += 0.55f;
 
         // Homing missiles
         if (Raylib.GetTime() > boss.timeTillNextMissile)
         {
-            new Bullet(new Vector2(boss.pos.X, boss.pos.Y), 0, 0, 6, boss.damage, false, true, true);
+            new Bullet(new Vector2(boss.pos.X, boss.pos.Y), 0, 0, 6, boss.damage * 3, false, true, true);
             boss.timeTillNextMissile = (float)Raylib.GetTime() + boss.fireRate;
         }
 

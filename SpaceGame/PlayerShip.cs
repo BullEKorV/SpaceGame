@@ -21,7 +21,7 @@ class Player
     public int health, maxHealth, score, damage = 15;
 
     // Timer variables
-    private float timeTillLaser, timeTillExplosive, timeTillHealthRegen, laserFireRate = 0.15f, explosiveFireRate = 0.3f;
+    public float timeTillLaser, timeTillExplosive, timeTillHealthRegen, laserFireRate = 0.15f, explosiveFireRate = 0.3f;
 
     public Player(Vector2 pos, float rotation, int maxHealth)
     {

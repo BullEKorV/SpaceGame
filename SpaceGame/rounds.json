@@ -4,6 +4,7 @@
         "enemies": {
             "easy": 0,
             "hard": 0,
+            "kamikaze": 0,
             "boss": 0
         },
         "spawnrate": 0
@@ -11,17 +12,19 @@
     {
         "round": 1,
         "enemies": {
-            "easy": 3,
-            "hard": 2,
-            "boss": 1
+            "easy": 0,
+            "hard": 0,
+            "kamikaze": 100,
+            "boss": 0
         },
-        "spawnrate": 1
+        "spawnrate": 0.0001
     },
     {
         "round": 2,
         "enemies": {
             "easy": 50,
             "hard": 10,
+            "kamikaze": 0,
             "boss": 0
         },
         "spawnrate": 1
@@ -31,6 +34,7 @@
         "enemies": {
             "easy": 10,
             "hard": 5,
+            "kamikaze": 0,
             "boss": 1
         },
         "spawnrate": 0.000000001

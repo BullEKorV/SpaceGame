@@ -171,8 +171,10 @@ class Program
                 DrawObjectRotation(Textures["EnemyEasy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Hard)
                 DrawObjectRotation(Textures["EnemyHard"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
+            else if (enemy.type == EnemyType.Kamikaze)
+                DrawObjectRotation(Textures["EnemyKamikaze"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
             else if (enemy.type == EnemyType.Dummy)
-                DrawObjectRotation(Textures["EnemyEasy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
+                DrawObjectRotation(Textures["EnemyDummy"], enemy.pos - Player.ship.pos, enemy.rotation, 1, 255);
 
         }
         // Draw all the enemy healthbars
@@ -258,10 +260,15 @@ class Program
         Textures.Add("PlayerShip", Raylib.LoadTexture("Textures/PlayerShip.png")); // Player ship
         Textures.Add("EnemyEasy", Raylib.LoadTexture("Textures/EnemyShipEasy.png")); // Enemy ship easy
         Textures.Add("EnemyHard", Raylib.LoadTexture("Textures/EnemyShipHard.png")); // Enemy ship hard
+        Textures.Add("EnemyKamikaze", Raylib.LoadTexture("Textures/EnemyKamikaze.png")); // Enemy kamikaze
+        Textures.Add("EnemyDummy", Raylib.LoadTexture("Textures/EnemyDummy.png")); // Enemy dummy
+
         Textures.Add("BossSun", Raylib.LoadTexture("Textures/BossSun.png")); // Boss
         Textures.Add("Sun", Raylib.LoadTexture("Textures/Sun.png")); // Boss sun
+
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
         Textures.Add("Bomb", Raylib.LoadTexture("Textures/Bomb.png")); // Bomb
+
         Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 
         // Effects

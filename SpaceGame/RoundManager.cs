@@ -29,7 +29,7 @@ class RoundManager
 
                 while (!enemySpawned)
                 {
-                    int enemyToSpawn = rnd.Next(0, 2);
+                    int enemyToSpawn = rnd.Next(0, 3);
 
                     if (enemyToSpawn == 0 && currentRound.enemies.easy > 0)
                     {
@@ -42,6 +42,12 @@ class RoundManager
                         enemySpawned = true;
                         new Enemy(EnemyType.Hard);
                         currentRound.enemies.hard--;
+                    }
+                    else if (enemyToSpawn == 2 && currentRound.enemies.kamikaze > 0)
+                    {
+                        enemySpawned = true;
+                        new Enemy(EnemyType.Kamikaze);
+                        currentRound.enemies.kamikaze--;
                     }
                 }
             }
@@ -61,7 +67,7 @@ class RoundManager
     }
     public static int EnemiesLeft()
     {
-        return currentRound.enemies.easy + currentRound.enemies.hard;
+        return currentRound.enemies.easy + currentRound.enemies.hard + currentRound.enemies.kamikaze;
     }
     public static void RoundCompleted()
     {
@@ -110,5 +116,6 @@ class EnemiesDifficulties
 {
     public int easy { get; set; }
     public int hard { get; set; }
+    public int kamikaze { get; set; }
     public int boss { get; set; }
 }

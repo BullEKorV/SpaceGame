@@ -76,9 +76,17 @@ class Enemy
             fireRate = 0.4f;
             shootingReach = 550;
         }
+        else if (type == EnemyType.Kamikaze)
+        {
+            maxHealth = 70;
+            speed = 0.35f;
+            damage = 100;
+            fireRate = 0.4f;
+            shootingReach = 50;
+        }
         else if (type == EnemyType.Dummy)
         {
-            maxHealth = 200;
+            maxHealth = 100;
             speed = 0.0f;
             damage = 0;
             fireRate = 0.4f;
@@ -121,14 +129,10 @@ class Enemy
         if (distanceToPlayer > enemy.shootingReach)
         {
             enemy.velocity += enemy.speed;
-            // if (enemy.velocity > 3)
-            //     enemy.velocity = 3;
         }
         else if (distanceToPlayer < enemy.shootingReach / 2)
         {
             enemy.velocity -= enemy.speed * 2;
-            // if (enemy.velocity < -6)
-            //     enemy.velocity = -6;
         }
 
         // Calculate new position
@@ -151,6 +155,12 @@ class Enemy
 
                     new Bullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false, false);
                     new Bullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false, false);
+                }
+                else if (enemy.type == EnemyType.Kamikaze)
+                {
+                    Player.ship.health -= enemy.damage;
+                    enemy.health -= enemy.health;
+                    Player.ship.timeTillHealthRegen = (float)Raylib.GetTime() + 3;
                 }
                 enemy.timeTillNextShoot = (float)Raylib.GetTime() + enemy.fireRate;
             }
@@ -177,5 +187,6 @@ enum EnemyType
 {
     Easy,
     Hard,
+    Kamikaze,
     Dummy
 }
