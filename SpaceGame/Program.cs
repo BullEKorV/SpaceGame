@@ -8,7 +8,7 @@ class Program
     public static Dictionary<String, Texture2D> allTextures = LoadTextures(); // Game Textures
     static void Main(string[] args)
     {
-        new Player(new Vector2(0, 0), 90, 300);
+        new Player(new Vector2(0, 0), 90, 500);
 
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);

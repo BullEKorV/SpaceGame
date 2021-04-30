@@ -13,7 +13,7 @@
         "round": 1,
         "enemies": {
             "easy": 3,
-            "hard": 0,
+            "hard": 2,
             "kamikaze": 0,
             "boss": 0
         },
@@ -22,21 +22,91 @@
     {
         "round": 2,
         "enemies": {
-            "easy": 50,
-            "hard": 10,
+            "easy": 5,
+            "hard": 3,
             "kamikaze": 0,
             "boss": 0
         },
-        "spawnrate": 1
+        "spawnrate": 2.7
     },
     {
         "round": 3,
         "enemies": {
+            "easy": 4,
+            "hard": 6,
+            "kamikaze": 1,
+            "boss": 0
+        },
+        "spawnrate": 2.5
+    },
+    {
+        "round": 4,
+        "enemies": {
+            "easy": 5,
+            "hard": 8,
+            "kamikaze": 1,
+            "boss": 0
+        },
+        "spawnrate": 2.3
+    },
+    {
+        "round": 5,
+        "enemies": {
             "easy": 10,
-            "hard": 5,
+            "hard": 3,
+            "kamikaze": 2,
+            "boss": 0
+        },
+        "spawnrate": 2
+    },
+    {
+        "round": 6,
+        "enemies": {
+            "easy": 10,
+            "hard": 8,
+            "kamikaze": 3,
+            "boss": 0
+        },
+        "spawnrate": 2.2
+    },
+    {
+        "round": 7,
+        "enemies": {
+            "easy": 10,
+            "hard": 15,
+            "kamikaze": 5,
+            "boss": 0
+        },
+        "spawnrate": 1.8
+    },
+    {
+        "round": 8,
+        "enemies": {
+            "easy": 20,
+            "hard": 1,
             "kamikaze": 0,
+            "boss": 0
+        },
+        "spawnrate": 1.2
+    },
+    {
+        "round": 9,
+        "enemies": {
+            "easy": 23,
+            "hard": 12,
+            "kamikaze": 8,
+            "boss": 0
+        },
+        "spawnrate": 1.3
+    },
+    {
+        "round": 10,
+        "enemies": {
+            "easy": 25,
+            "hard": 25,
+            "kamikaze": 10,
             "boss": 1
         },
-        "spawnrate": 0.000000001
+        "spawnrate": 1.5
     }
 ]

@@ -57,7 +57,10 @@ class RoundManager
                 new BossSun();
                 RoundManager.currentRound.enemies.boss--;
             }
-            currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + currentRound.spawnRate;
+            int extraTime = 0;
+            if (EnemiesLeft() == 0 && currentRound.enemies.boss > 0)
+                extraTime = 5;
+            currentRound.timeTillNextSpawn = (float)Raylib.GetTime() + currentRound.spawnRate + extraTime;
         }
     }
     public static void GetCurrentRound(int round)

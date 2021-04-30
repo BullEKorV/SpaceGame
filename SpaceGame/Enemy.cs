@@ -110,9 +110,9 @@ class Enemy
         float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
 
         int shootingReach = 400;
-        float fireRate = 0.25f;
+        float fireRate = 0.22f;
         float speed = 9f;
-        int damage = 5;
+        int damage = 4;
 
         // Calculate new position
         float rotationAroundPlayer = Program.LookAt(Player.ship.pos, enemy.pos);
@@ -149,10 +149,10 @@ class Enemy
 
         float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
 
-        int shootingReach = 550;
-        float fireRate = 0.4f;
-        float speed = 0.14f;
-        int damage = 12;
+        int shootingReach = 650;
+        float fireRate = 0.5f;
+        float speed = 0.18f;
+        int damage = 20;
 
         // Move closer to the player
         if (distanceToPlayer > shootingReach)
@@ -176,8 +176,8 @@ class Enemy
             Vector2 leftCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation - 90);
             Vector2 rightCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation + 90);
 
-            new Bullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, damage, false, false, false);
-            new Bullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, damage, false, false, false);
+            new Bullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 35, damage, false, false, false);
+            new Bullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 35, damage, false, false, false);
 
             enemy.timeTillNextShoot = (float)Raylib.GetTime() + fireRate;
         }

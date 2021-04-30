@@ -56,7 +56,7 @@ class Player
 
         // Regen health after a while
         if (ship.health < ship.maxHealth && Raylib.GetTime() > ship.timeTillHealthRegen)
-            ship.health++;
+            ship.health += 2;
 
         // Check keypresses
         // KeyPresses();
