@@ -266,7 +266,7 @@ class Program
         Textures.Add("Sun", Raylib.LoadTexture("Textures/Sun.png")); // Boss sun
 
         Textures.Add("Laser", Raylib.LoadTexture("Textures/Laser.png")); // Bullet
-        Textures.Add("Bomb", Raylib.LoadTexture("Textures/Bomb.png")); // Bomb
+        Textures.Add("Bomb", Raylib.LoadTexture("Textures/BulletExplosive.png")); // Bomb
 
         Textures.Add("Star", Raylib.LoadTexture("Textures/Star.png")); // Star
 

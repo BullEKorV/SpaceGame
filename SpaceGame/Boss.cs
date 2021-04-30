@@ -178,6 +178,8 @@ class BossSun
             boss.sunTimeTillNextShoot = (float)Raylib.GetTime() + boss.sunFireRate;
         }
         boss.sunRotation += 0.55f;
+        if (boss.sunRotation > 360)
+            boss.sunRotation -= 360;
 
         // Homing missiles
         if (Raylib.GetTime() > boss.timeTillNextMissile)

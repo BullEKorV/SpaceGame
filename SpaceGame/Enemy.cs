@@ -17,16 +17,16 @@ class Enemy
     public int width, height;
 
     // Velocity variables
-    private float velocity, speed;
+    private float velocity, rotationSpeed, rotationDirection;
 
     // Rotation
     public float rotation;
 
     // Stats
-    public int health, maxHealth, damage, shootingReach;
+    public int health, maxHealth;
 
     // Timer variables
-    private float timeTillNextShoot, fireRate;
+    private float timeTillNextShoot;
     public Enemy(EnemyType type)
     {
         var rnd = new Random();
@@ -54,54 +54,28 @@ class Enemy
         }
 
         int maxHealth = 0;
-        float speed = 0;
-        int damage = 0;
-        float fireRate = 0;
-        int shootingReach = 0;
 
         // Give special enemies special stats 
-        if (type == EnemyType.Easy) // Find better system
+        if (type == EnemyType.Easy)
         {
             maxHealth = 100;
-            speed = 0.21f;
-            damage = 10;
-            fireRate = 0.2f;
-            shootingReach = 400;
+            this.rotationSpeed = rnd.Next(30, 50);
+            this.rotationDirection = rnd.Next(0, 2);
         }
         else if (type == EnemyType.Hard)
-        {
             maxHealth = 200;
-            speed = 0.14f;
-            damage = 6;
-            fireRate = 0.4f;
-            shootingReach = 550;
-        }
         else if (type == EnemyType.Kamikaze)
-        {
-            maxHealth = 70;
-            speed = 0.35f;
-            damage = 100;
-            fireRate = 0.4f;
-            shootingReach = 50;
-        }
+            maxHealth = 50;
         else if (type == EnemyType.Dummy)
         {
             maxHealth = 100;
-            speed = 0.0f;
-            damage = 0;
-            fireRate = 0.4f;
-            shootingReach = 0;
             pos = new Vector2(200, 0);
         }
 
         this.pos = pos;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.speed = speed;
-        this.damage = damage;
-        this.fireRate = fireRate;
         this.type = type;
-        this.shootingReach = shootingReach;
         this.width = Program.allTextures["EnemyEasy"].width;
         this.height = Program.allTextures["EnemyEasy"].height;
 
@@ -111,7 +85,15 @@ class Enemy
     {
         for (int i = 0; i < allEnemies.Count; i++)
         {
-            EnemyAI(allEnemies[i]);
+            if (allEnemies[i].type == EnemyType.Easy)
+                EnemyAIEasy(allEnemies[i]);
+            else if (allEnemies[i].type == EnemyType.Hard)
+                EnemyAIHard(allEnemies[i]);
+            else if (allEnemies[i].type == EnemyType.Kamikaze)
+                EnemyAIKamikaze(allEnemies[i]);
+            else
+                EnemyAIDummy(allEnemies[i]);
+
         }
         if (RoundManager.bossAlive == true)
         {
@@ -119,20 +101,67 @@ class Enemy
                 BossSun.AI();
         }
     }
-    static void EnemyAI(Enemy enemy)
+    static void EnemyAIEasy(Enemy enemy)
+    {
+        var rnd = new Random();
+
+        enemy.rotation = Program.LookAt(enemy.pos, Player.ship.pos);
+
+        float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
+
+        int shootingReach = 400;
+        float fireRate = 0.25f;
+        float speed = 9f;
+        int damage = 5;
+
+        // Calculate new position
+        float rotationAroundPlayer = Program.LookAt(Player.ship.pos, enemy.pos);
+
+        if (enemy.rotationDirection == 0)
+            rotationAroundPlayer += enemy.rotationSpeed;
+        else
+            rotationAroundPlayer -= enemy.rotationSpeed;
+
+        Vector2 newPos = Program.CalculatePositionVelocity(Player.ship.pos, shootingReach, rotationAroundPlayer);
+
+        enemy.pos = Program.CalculatePositionVelocity(enemy.pos, speed, Program.LookAt(enemy.pos, newPos));
+
+        // Shooting logic
+        if (distanceToPlayer < shootingReach * 1.2f && Raylib.GetTime() > enemy.timeTillNextShoot)
+        {
+            new Bullet(enemy.pos, enemy.rotation, enemy.height / 2 + 10, 20, damage, false, false, false);
+            enemy.timeTillNextShoot = (float)Raylib.GetTime() + fireRate;
+        }
+
+        // Check if collision with bullet
+        enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);
+
+        // Check if dead
+        if (enemy.health <= 0)
+        {
+            EnemyDead(enemy);
+        }
+    }
+
+    static void EnemyAIHard(Enemy enemy)
     {
         enemy.rotation = Program.LookAt(enemy.pos, Player.ship.pos);
 
         float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
 
+        int shootingReach = 550;
+        float fireRate = 0.4f;
+        float speed = 0.14f;
+        int damage = 12;
+
         // Move closer to the player
-        if (distanceToPlayer > enemy.shootingReach)
+        if (distanceToPlayer > shootingReach)
         {
-            enemy.velocity += enemy.speed;
+            enemy.velocity += speed;
         }
-        else if (distanceToPlayer < enemy.shootingReach / 2)
+        else if (distanceToPlayer < shootingReach / 2)
         {
-            enemy.velocity -= enemy.speed * 2;
+            enemy.velocity -= speed * 2;
         }
 
         // Calculate new position
@@ -141,30 +170,63 @@ class Enemy
         enemy.velocity *= 0.96f;
 
         // Shooting logic
-        if (distanceToPlayer < enemy.shootingReach)
+        if (distanceToPlayer < shootingReach && Raylib.GetTime() > enemy.timeTillNextShoot)
         {
-            if (Raylib.GetTime() > enemy.timeTillNextShoot)
-            {
-                if (enemy.type == EnemyType.Easy)
-                    new Bullet(enemy.pos, enemy.rotation, enemy.height / 2 + 10, 20, enemy.damage, false, false, false);
-                else if (enemy.type == EnemyType.Hard)
-                {
-                    // Shoot 2 bullets
-                    Vector2 leftCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation - 90);
-                    Vector2 rightCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation + 90);
+            // Shoot 2 bullets
+            Vector2 leftCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation - 90);
+            Vector2 rightCords = Program.CalculatePositionVelocity(enemy.pos, 40, enemy.rotation + 90);
 
-                    new Bullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false, false);
-                    new Bullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, enemy.damage, false, false, false);
-                }
-                else if (enemy.type == EnemyType.Kamikaze)
-                {
-                    Player.ship.health -= enemy.damage;
-                    enemy.health -= enemy.health;
-                    Player.ship.timeTillHealthRegen = (float)Raylib.GetTime() + 3;
-                }
-                enemy.timeTillNextShoot = (float)Raylib.GetTime() + enemy.fireRate;
-            }
+            new Bullet(leftCords, enemy.rotation, enemy.height / 2 + 15, 25, damage, false, false, false);
+            new Bullet(rightCords, enemy.rotation, enemy.height / 2 + 15, 25, damage, false, false, false);
+
+            enemy.timeTillNextShoot = (float)Raylib.GetTime() + fireRate;
         }
+
+        // Check if collision with bullet
+        enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);
+
+        // Check if dead
+        if (enemy.health <= 0)
+        {
+            EnemyDead(enemy);
+        }
+    }
+    static void EnemyAIKamikaze(Enemy enemy)
+    {
+        enemy.rotation = Program.LookAt(enemy.pos, Player.ship.pos);
+
+        float distanceToPlayer = Vector2.Distance(enemy.pos, Player.ship.pos);
+
+        float speed = 0.35f;
+        int damage = 100;
+        int shootingReach = 50;
+
+        // Calculate new position
+        enemy.velocity += speed;
+        enemy.pos = Program.CalculatePositionVelocity(enemy.pos, enemy.velocity, enemy.rotation);
+        enemy.velocity *= 0.96f;
+
+        // Shooting logic
+        if (distanceToPlayer < shootingReach)
+        {
+            Player.ship.TakeDamage(damage);
+
+            EnemyDead(enemy);
+            // return;
+        }
+
+        // Check if collision with bullet
+        enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);
+
+        // Check if dead
+        if (enemy.health <= 0)
+        {
+            EnemyDead(enemy);
+        }
+    }
+    static void EnemyAIDummy(Enemy enemy)
+    {
+        enemy.rotation = Program.LookAt(enemy.pos, Player.ship.pos);
 
         // Check if collision with bullet
         enemy.health -= Program.CheckBulletCollision(enemy.pos, enemy.width, false);

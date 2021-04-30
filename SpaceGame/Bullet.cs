@@ -62,6 +62,12 @@ class Bullet
                 }
             }
 
+            // Rotate explosive bullets
+            if (allBullets[i].isExplosive)
+                allBullets[i].rotation += 6;
+            if (allBullets[i].rotation > 360)
+                allBullets[i].rotation -= 360;
+
             allBullets[i].pos = Program.CalculatePosition(allBullets[i].pos, allBullets[i].velocity);
 
             // Delete bullet if too far away
