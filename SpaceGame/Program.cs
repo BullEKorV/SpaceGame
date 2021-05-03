@@ -8,14 +8,11 @@ class Program
     public static Dictionary<String, Texture2D> allTextures = LoadTextures(); // Game Textures
     static void Main(string[] args)
     {
-        new Player(new Vector2(0, 0), 90, 500);
-
         Raylib.InitWindow(1900, 1000, "SpaceGame");
         Raylib.SetTargetFPS(120);
+        Raylib.ToggleFullscreen();
 
-        // Give width and height to Player
-        Player.ship.width = allTextures["PlayerShip"].width;
-        Player.ship.height = allTextures["PlayerShip"].height;
+        new Player(new Vector2(0, 0), 90, 500);
 
         RoundManager.GetCurrentRound(0);
         new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 3 + 120, 25), 40, "Welcome to SpaceGame!", Color.WHITE);
@@ -41,10 +38,18 @@ class Program
             Bullet.Move();
 
             // Control player and spawn bullets
-            Player.ship.PlayerControl();
+            if (Player.ship.isDead == false)
+            {
+                Player.ship.PlayerControl();
 
-            // Enemy AI
-            Enemy.EnemyLogic();
+                // Enemy AI
+                Enemy.EnemyLogic();
+            }
+            else
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_R))
+                    ResetGame();
+            }
 
             // Render Frame
             Raylib.BeginDrawing();
@@ -224,7 +229,6 @@ class Program
         foreach (TextBox text in EventManager.allTexts)
         {
             Raylib.DrawText(text.text, (int)text.pos.X, (int)text.pos.Y, text.fontSize, text.color);
-            // Raylib.DrawTextEx(Font, )
         }
     }
     static void DrawHealthBar(Vector2 pos, int width, int height, int health, int maxHealth)
@@ -251,7 +255,19 @@ class Program
         Color rl = new Color(255, 255, 255, (int)transparency);
 
         Raylib.DrawTexturePro(texture, sourceRec, destRec, origin, rotation, rl);
-
+    }
+    private static void ResetGame()
+    {
+        new Player(new Vector2(0, 0), 90, 500);
+        EventManager.allTexts.Clear();
+        Enemy.allEnemies.Clear();
+        RoundManager.GetCurrentRound(0);
+        RoundManager.roundActive = true;
+        RoundManager.bossAlive = false;
+        Star.allStarsChunks.Clear();
+        Star.SpawnStars();
+        new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 3 + 120, 25), 40, "Welcome to SpaceGame!", Color.WHITE);
+        new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 5, 80), 25, "You move around with WASD\nYou shoot lasers with left mouse button and explosive bullets with right mouse button\nYou'll have to dodge the enemies which comes in rounds with increasing difficulty.\nKill the dummy enemy when you're ready!", Color.WHITE);
     }
     static Dictionary<String, Texture2D> LoadTextures() // Load Textures
     {

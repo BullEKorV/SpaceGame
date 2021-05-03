@@ -23,12 +23,18 @@ class Player
     // Timer variables
     public float timeTillLaser, timeTillExplosive, timeTillHealthRegen, laserFireRate = 0.15f, explosiveFireRate = 0.3f;
 
+    public bool isDead = false;
+
     public Player(Vector2 pos, float rotation, int maxHealth)
     {
         this.pos = pos;
         this.rotation = rotation;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.isDead = false;
+        this.width = Program.allTextures["PlayerShip"].width;
+        this.height = Program.allTextures["PlayerShip"].height;
+
 
         ship = this;
     }
@@ -58,8 +64,6 @@ class Player
         if (ship.health < ship.maxHealth && Raylib.GetTime() > ship.timeTillHealthRegen)
             ship.health += 2;
 
-        // Check keypresses
-        // KeyPresses();
 
         // Calculate velocity
         CalculateVelocity();
@@ -75,6 +79,12 @@ class Player
 
         if (damageTaken > 0)
             ship.timeTillHealthRegen = (int)Raylib.GetTime() + 3;
+        // You died lol
+        if (ship.health <= 0)
+        {
+            ship.isDead = true;
+            new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 3, 50), 45, "           YOU DIED!!!\nYou achieved a score of\n           " + ship.score, Color.RED);
+        }
     }
     public void TakeDamage(int damage)
     {
