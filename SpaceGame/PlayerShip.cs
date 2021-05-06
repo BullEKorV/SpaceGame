@@ -83,7 +83,7 @@ class Player
         if (ship.health <= 0)
         {
             ship.isDead = true;
-            new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 3, 50), 45, "           YOU DIED!!!\nYou achieved a score of\n           " + ship.score, Color.RED);
+            new TextBox(999, new Vector2(Raylib.GetScreenWidth() / 3, 25), 40, "           YOU DIED!!!\n\nYou achieved a score of: " + ship.score + "\nPress \"R\" to play again", Color.WHITE);
         }
     }
     public void TakeDamage(int damage)

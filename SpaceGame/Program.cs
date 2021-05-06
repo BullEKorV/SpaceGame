@@ -67,7 +67,7 @@ class Program
         {
             float distanceBetweenCircles = Vector2.Distance(pos, Bullet.allBullets[i].pos);
 
-            if (distanceBetweenCircles < size / 2 + 10)
+            if (distanceBetweenCircles < size / 2 + 15)
             {
                 if (Bullet.allBullets[i].isPlayer != isPlayer)
                 {
@@ -153,7 +153,7 @@ class Program
     {
         // https://www.raylib.com/examples/web/textures/loader.html?name=textures_srcrec_dstrec
 
-        Raylib.DrawRectangle((int)(-Player.ship.pos.X - 50f), (int)(Player.ship.pos.Y - 50f), 100, 100, Color.GREEN);
+        // Raylib.DrawRectangle((int)(-Player.ship.pos.X - 50f), (int)(Player.ship.pos.Y - 50f), 100, 100, Color.GREEN);
 
         // Draw stars
         Star.DrawStars();
@@ -210,7 +210,7 @@ class Program
         Raylib.DrawText(Raylib.GetFPS().ToString(), Raylib.GetScreenWidth() - 50, 10, 30, Color.WHITE);
 
         // Display player stats
-        Raylib.DrawText(Player.ship.health.ToString() + ":" + Player.ship.maxHealth.ToString(), Raylib.GetScreenWidth() - 120, 50, 30, Color.WHITE);
+        // Raylib.DrawText(Player.ship.health.ToString() + ":" + Player.ship.maxHealth.ToString(), Raylib.GetScreenWidth() - 120, 50, 30, Color.WHITE);
 
         // Display player score
         Raylib.DrawText("Score : " + Player.ship.score.ToString(), 20, 10, 40, Color.YELLOW);
