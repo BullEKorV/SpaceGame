@@ -76,7 +76,7 @@ class RoundManager
     {
         if (currentRound.round == 0)
             EventManager.allTexts.Clear();
-        if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0 && bossAlive == false)
+        if (EnemiesLeft() == 0 && Enemy.allEnemies.Count == 0 && bossAlive == false && currentRound.enemies.boss == 0)
         {
             if (currentRound.round < GetLevelsJson().Count - 1)
             {
